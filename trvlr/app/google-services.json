@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "12962208485",
+    "firebase_url": "https://trvlr-312df.firebaseio.com",
+    "project_id": "trvlr-312df",
+    "storage_bucket": "trvlr-312df.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:12962208485:android:46c10ff40f15abaf",
+        "android_client_info": {
+          "package_name": "ch.trvlr.trvlr"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "12962208485-gash101lhd38d8gecmp8vn1kmo37mqcd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyChuZKdO_seTqYZgxp9dlim6XE2UkPlPi8"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
