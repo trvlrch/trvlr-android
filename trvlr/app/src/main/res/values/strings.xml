@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">trvlr</string>
+    <string name="title_activity_public_chat">Public Chat</string>
 </resources>
