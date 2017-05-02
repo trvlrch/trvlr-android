@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
@@ -18,6 +19,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
+import java.util.ArrayList;
 
 public class FindConnectionActivity extends AppCompatActivity {
 
@@ -35,30 +37,45 @@ public class FindConnectionActivity extends AppCompatActivity {
 
 
         btnfindConn = (Button) findViewById(R.id.btn_findConn);
-        fromInp = (Spinner) findViewById(R.layout.activity_findconn.fromInp);
-        toInp = (Spinner) findViewById(R.layout.activity_findconn.toInp);
+//        fromInp = (Spinner) findViewById(R.layout.activity_findconn.fromSpin);
+//        toInp = (Spinner) findViewById(R.layout.activity_findconn.toSpin);
+
 
 
 
 
         // put values into spinners
 
-        java.util.ArrayList<String> strings = new java.util.ArrayList<>();
-        strings.add("Zurich-HB") ;
-        strings.add("Stadelhofen");
-        strings.add("Winterthur");
-        strings.add("Hoeri");
-
-        Spinner fromSp;
-        fromSp = (Spinner) findViewById(R.layout.activity_findconn.fromInp) ;
-        SpinnerAdapter fromAdapter = new SpinnerAdapter(FindConnectionActivity.this, R.layout.activity_findconn.fromInp , strings);
-        fromSp.setAdapter(fromAdapter);
+        ArrayList<String> stations = new ArrayList<>();
+        stations.add("Zurich-HB") ;
+        stations.add("Stadelhofen");
+        stations.add("Winterthur");
+        stations.add("Hoeri");
 
 
-        Spinner toSp;
-        toSp = (Spinner) findViewById(R.layout.activity_findconn.toInp) ;
-        SpinnerAdapter toAdapter = new SpinnerAdapter(FindConnectionActivity.this, R.layout.activity_findconn.toInp , strings);
-        toSp.setAdapter(toAdapter);
+        Spinner fromSpin = new Spinner(this);
+        ArrayAdapter<String> fromspinnerArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, stations); //selected item will look like a spinner set from XML
+        fromspinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        fromSpin.setAdapter(fromspinnerArrayAdapter);
+
+
+        Spinner toSpin = new Spinner(this);
+        ArrayAdapter<String> tospinnerArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, stations); //selected item will look like a spinner set from XML
+        tospinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        toSpin.setAdapter(tospinnerArrayAdapter);
+
+
+// this didn't work TODO: remove this
+//        Spinner fromSp;
+//        fromSp = (Spinner) findViewById(R.layout.activity_findconn.fromSpin) ;
+//        SpinnerAdapter fromAdapter = new SpinnerAdapter(FindConnectionActivity.this, R.layout.activity_findconn.fromSpin , stations);
+//        fromSp.setAdapter(fromAdapter);
+//
+//
+//        Spinner toSp;
+//        toSp = (Spinner) findViewById(R.layout.activity_findconn.toSpin) ;
+//        SpinnerAdapter toAdapter = new SpinnerAdapter(FindConnectionActivity.this, R.layout.activity_findconn.toSpin , stations);
+//        toSp.setAdapter(toAdapter);
 
 
 

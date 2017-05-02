@@ -31,5 +31,6 @@
     <string name="from">Starting station</string>
     <string name="to">Destination station</string>
     <string name="findConn">find connection</string>
+    <string name="title_activity_public_chat">Public chat</string>
 
 </resources>
