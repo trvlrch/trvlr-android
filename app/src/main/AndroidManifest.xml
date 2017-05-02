@@ -18,7 +18,8 @@
         <activity
             android:name=".PublicChat"
             android:label="@string/title_activity_public_chat"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustResize"></activity>
     </application>
 
 </manifest>
