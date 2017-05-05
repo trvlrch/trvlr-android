@@ -20,4 +20,5 @@
     <color name="btn_login_bg">#eceef1</color>
     <color name="lbl_name">#333333</color>
     <color name="btn_logut_bg">#ffffff</color>
+    <color name="grey_bg">#cbcbcc</color>
 </resources>
