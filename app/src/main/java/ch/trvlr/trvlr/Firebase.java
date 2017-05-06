@@ -14,7 +14,7 @@ public class Firebase extends AppCompatActivity {
     }
 
     public void openChatWindow(View view) {
-        Intent intent = new Intent(this, PublicChat.class);
+        Intent intent = new Intent(this, PublicChatActivity.class);
         startActivity(intent);
     }
 }

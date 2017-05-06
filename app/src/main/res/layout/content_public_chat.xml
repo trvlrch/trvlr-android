@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="ch.trvlr.trvlr.PublicChat"
+    tools:context="ch.trvlr.trvlr.PublicChatActivity"
     tools:showIn="@layout/activity_public_chat"
     tools:layout_editor_absoluteY="81dp"
     tools:layout_editor_absoluteX="0dp">
@@ -34,7 +34,7 @@
         app:layout_constraintVertical_bias="0.525" />
 
     <EditText
-        android:id="@+id/editText"
+        android:id="@+id/chatText"
         android:layout_width="0dp"
         android:layout_height="64dp"
         android:layout_marginBottom="0dp"
@@ -45,7 +45,6 @@
         android:layout_marginTop="8dp"
         android:ems="10"
         android:inputType="textPersonName"
-        android:text="Name"
         app:layout_constraintBottom_toBottomOf="@+id/sendButton"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -66,13 +65,12 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/editText">
+        app:layout_constraintBottom_toTopOf="@+id/chatText">
 
         <TextView
             android:id="@+id/chatOutput"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="TextView" />
+            android:layout_height="match_parent" />
     </ScrollView>
 
 </android.support.constraint.ConstraintLayout>
