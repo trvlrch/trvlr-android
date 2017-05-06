@@ -8,7 +8,17 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
+import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -20,6 +30,8 @@ import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
 import java.util.ArrayList;
+
+import static com.android.volley.Request.*;
 
 public class FindConnectionActivity extends AppCompatActivity {
 
@@ -72,57 +84,52 @@ public class FindConnectionActivity extends AppCompatActivity {
         btnfindConn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 // get user inputs from spinners from and to
-                String from = fromInp.getSelectedItem().toString();
-                String to = toInp.getSelectedItem().toString();
+                Spinner fromSpin = (Spinner) findViewById(R.id.fromSpin);
+                Spinner toSpin = (Spinner) findViewById(R.id.toSpin);
+                String from = fromSpin.getSelectedItem().toString();
+                String to = toSpin.getSelectedItem().toString();
 
-                // get id for connection
-                // example call:
-                //  http://trvlr.ch:8080/api/public-chats/find/?from=Zurich&to=Hoeri
+                RequestQueue queue = Volley.newRequestQueue(FindConnectionActivity.this);
 
-                try {
+                JsonArrayRequest myReq = new JsonArrayRequest(Method.GET,
+                        "http://trvlr.ch:8080/api/public-chats/search/?from=" + from + "&to=" + to,
+                        null,
+                        createMyReqSuccessListener(),
+                        createMyReqErrorListener()
+                        );
 
-                    URL url = new URL("http:/trvlr.ch:8080/api/public-chats/search/?from=%s&to=%s",from, to);
-                    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-                    conn.setRequestMethod("GET");
-                    conn.setRequestProperty("Accept", "application/json");
-
-                    if (conn.getResponseCode() != 200) {
-                        throw new RuntimeException("Failed : HTTP error code : "
-                                + conn.getResponseCode());
-                    }
-
-                    BufferedReader br = new BufferedReader(new InputStreamReader(
-                            (conn.getInputStream())));
-
-                    String output; //this output must be the connection details
-                    while ((output = br.readLine()) != null) {
-                        System.out.println(output);
-                    }
-
-                    result = new JSONObject(output);
-                    conn.disconnect();
-
-                } catch (IOException | JSONException e) {
-                    e.printStackTrace();
-                }
-
-                try {
-                    chatId = (int) result.get("id");
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
+                queue.add(myReq);
+            }
+        });
+    }
+    private Response.Listener<JSONArray> createMyReqSuccessListener() {
+        return new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray response) {
                 // open the chat window (open chat activity screen)
                 Intent intent = new Intent(getApplicationContext(), PublicChat.class);
                 Bundle b = new Bundle();
-                b.putInt("chatId", chatId);
+                try {
+                    // TODO handle empty arrays etc
+                    b.putInt("chatId", response.getJSONArray(0).getInt(0));
+                } catch (JSONException e) {
+                    Toast.makeText(FindConnectionActivity.this, e.getMessage(), Toast.LENGTH_SHORT);
+                }
                 intent.putExtras(b);
                 startActivity(intent);
                 finish();
-
             }
-        });
+        };
+    }
+
+
+    private Response.ErrorListener createMyReqErrorListener() {
+        return new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(FindConnectionActivity.this, error.getMessage(), Toast.LENGTH_SHORT);
+            }
+        };
     }
 }

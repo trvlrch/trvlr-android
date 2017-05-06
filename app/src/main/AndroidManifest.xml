@@ -21,5 +21,6 @@
             android:windowSoftInputMode="adjustResize"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".FindConnectionActivity"></activity>
+        <uses-permission android:name="android.permission.INTERNET"/>
     </application>
 </manifest>
