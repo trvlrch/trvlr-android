@@ -31,7 +31,7 @@ public class PublicChatActivity extends AppCompatActivity {
 
         @Override
         public void onOpen(WebSocket websocket, Response response) {
-            websocket.send("Foo");
+            //websocket.send("Foo");
         }
 
         @Override
@@ -54,6 +54,7 @@ public class PublicChatActivity extends AppCompatActivity {
 
     private void startWebSocketConnection() {
         Request request = new Request.Builder().url("ws://echo.websocket.org").build();
+        // ws://trvlr.ch:8080/socket
         ChatWebSocketListener listener = new ChatWebSocketListener();
         websocket = client.newWebSocket(request, listener);
 
@@ -80,8 +81,15 @@ public class PublicChatActivity extends AppCompatActivity {
                     Log.v(TAG, "Sending " + chatText.getText().toString());
                     websocket.send(chatText.getText().toString());
                 } catch(Exception e) {
+                    // TODO: graceful message and trying to reconnect
                     Log.d(TAG, "No Socket :( ");
                 }
+
+                chatText.post(new Runnable() {
+                    public void run() {
+                        chatText.setText("");
+                    }
+                });
             }
         });
     }
