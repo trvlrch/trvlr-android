@@ -9,9 +9,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.google.firebase.iid.FirebaseInstanceId;
+
 import org.java_websocket.WebSocket;
 
 import rx.functions.Action1;
+import ua.naiksoftware.stomp.LifecycleEvent;
 import ua.naiksoftware.stomp.Stomp;
 import ua.naiksoftware.stomp.client.StompClient;
 import ua.naiksoftware.stomp.client.StompMessage;
@@ -37,7 +40,26 @@ public class PublicChatActivity extends AppCompatActivity {
 
         mStompClient = Stomp.over(WebSocket.class, "ws://trvlr.ch:8080/socket");
 
+        mStompClient.lifecycle().subscribe(new Action1<LifecycleEvent>() {
+            @Override
+            public void call(LifecycleEvent lifecycleEvent) {
+                switch (lifecycleEvent.getType()) {
+                    case OPENED:
+                        Log.d(TAG, "Stomp connection opened: " + lifecycleEvent.getMessage());
+                        break;
 
+                    case ERROR:
+                        Log.e(TAG, "Error", lifecycleEvent.getException());
+                        break;
+
+                    case CLOSED:
+                        Log.d(TAG, "Stomp connection closed: " + lifecycleEvent.getMessage());
+                        break;
+                }
+            }
+        });
+
+        FirebaseInstanceId.getInstance().getToken();
 
         mStompClient.topic("/topic/chat/" + roomID).subscribe(new Action1<StompMessage>() {
             @Override
@@ -54,7 +76,7 @@ public class PublicChatActivity extends AppCompatActivity {
             public void onClick(View view) {
                 try {
                     Log.v(TAG, "Sending " + chatText.getText().toString());
-                    sendEchoViaStomp(chatText.getText().toString());
+                    sendMessage(chatText.getText().toString());
                 } catch(Exception e) {
                     // TODO: graceful message and trying to reconnect
                     Log.d(TAG, "No Socket :( ");
@@ -77,8 +99,8 @@ public class PublicChatActivity extends AppCompatActivity {
         });
     }
 
-    public void sendEchoViaStomp(String message) {
-        mStompClient.send("/app/chat/1", message )
+    public void sendMessage(String message) {
+        mStompClient.send("/app/chat/1", message)
                 .subscribe(new Action1<Object>() {
                     @Override
                     public void call(Object aVoid) {
@@ -87,8 +109,7 @@ public class PublicChatActivity extends AppCompatActivity {
                 }, new Action1<Throwable>() {
                     @Override
                     public void call(Throwable throwable) {
-                        switch (Log.e(TAG, "Error send STOMP echo", throwable)) {
-                        }
+                        Log.e(TAG, "Error send STOMP echo", throwable);
                     }
                 });
     }
