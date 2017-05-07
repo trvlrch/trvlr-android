@@ -49,23 +49,14 @@ public class FindConnectionActivity extends AppCompatActivity {
 
 
         btnfindConn = (Button) findViewById(R.id.btn_findConn);
-//        fromInp = (Spinner) findViewById(R.layout.activity_findconn.fromSpin);
-//        toInp = (Spinner) findViewById(R.layout.activity_findconn.toSpin);
-
-
-
+        ArrayList<String> stations = new ArrayList<>();
 
 
         // put values into spinners
 
-        ArrayList<String> stations = new ArrayList<>();
-        stations.add("Zuerich") ;
-        stations.add("Zürich") ;
         stations.add("Zurich");
-        stations.add("Stadelhofen");
+        stations.add("Bern");
         stations.add("Winterthur");
-        stations.add("Hoeri");
-        stations.add("Höri");
 
 
         Spinner fromSpin = (Spinner) findViewById(R.id.fromSpin);
@@ -90,6 +81,10 @@ public class FindConnectionActivity extends AppCompatActivity {
                 String from = fromSpin.getSelectedItem().toString();
                 String to = toSpin.getSelectedItem().toString();
 
+                if(from.equals(to)){
+                    Toast.makeText(FindConnectionActivity.this, "invalid connection", Toast.LENGTH_LONG).show();
+                }
+
                 RequestQueue queue = Volley.newRequestQueue(FindConnectionActivity.this);
 
                 JsonArrayRequest myReq = new JsonArrayRequest(Method.GET,
@@ -97,7 +92,7 @@ public class FindConnectionActivity extends AppCompatActivity {
                         null,
                         createMyReqSuccessListener(),
                         createMyReqErrorListener()
-                        );
+                );
 
                 queue.add(myReq);
             }
