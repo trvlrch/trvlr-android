@@ -7,18 +7,28 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
+import android.widget.SpinnerAdapter;
 import android.widget.Toast;
 
+import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
+import java.net.URL;
 import java.util.ArrayList;
 
 import static com.android.volley.Request.*;
@@ -98,17 +108,28 @@ public class FindConnectionActivity extends AppCompatActivity {
             @Override
             public void onResponse(JSONArray response) {
                 // open the chat window (open chat activity screen)
-                Intent intent = new Intent(getApplicationContext(), PublicChatActivity.class);
-                Bundle b = new Bundle();
+
                 try {
-                    // TODO handle empty arrays etc
-                    b.putInt("chatId", response.getJSONArray(0).getInt(0));
+
+                    if(response.length() == 0){
+                        Toast.makeText(FindConnectionActivity.this, "invalid connection", Toast.LENGTH_LONG).show();
+                    }
+
+                    else{
+                        Intent intent = new Intent(getApplicationContext(), PublicChat.class);
+                        Bundle b = new Bundle();
+                        b.putInt("chatId", response.getJSONObject(0).getInt("id"));
+                        intent.putExtras(b);
+                        startActivity(intent);
+                        finish();
+                    }
+
+
                 } catch (JSONException e) {
-                    Toast.makeText(FindConnectionActivity.this, e.getMessage(), Toast.LENGTH_SHORT);
+                    Toast.makeText(FindConnectionActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
-                intent.putExtras(b);
-                startActivity(intent);
-                finish();
+
+
             }
         };
     }
@@ -118,7 +139,7 @@ public class FindConnectionActivity extends AppCompatActivity {
         return new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(FindConnectionActivity.this, error.getMessage(), Toast.LENGTH_SHORT);
+                Toast.makeText(FindConnectionActivity.this, error.getMessage(), Toast.LENGTH_SHORT).show();
             }
         };
     }
