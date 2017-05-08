@@ -20,7 +20,6 @@
             android:name=".PublicChatActivity"
             android:label="@string/title_activity_public_chat"
             android:windowSoftInputMode="adjustResize"
-            android:theme="@style/AppTheme.NoActionBar"
             android:exported="true" />
         <activity android:name=".FindConnectionActivity"></activity>
     </application>

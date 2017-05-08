@@ -19,6 +19,9 @@ import ua.naiksoftware.stomp.Stomp;
 import ua.naiksoftware.stomp.client.StompClient;
 import ua.naiksoftware.stomp.client.StompMessage;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class PublicChatActivity extends AppCompatActivity {
     private static final String TAG = "PublicChatActivity";
     private Button sendButton;
@@ -31,14 +34,16 @@ public class PublicChatActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_public_chat);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
         sendButton = (Button) findViewById(R.id.sendButton);
         chatOutput = (TextView) findViewById(R.id.chatOutput);
         chatText = (EditText) findViewById(R.id.chatText);
         roomID = "1";
 
-        mStompClient = Stomp.over(WebSocket.class, "ws://trvlr.ch:8080/socket");
+        Map mStompHeaders = new HashMap();
+        mStompHeaders.put("token", FirebaseInstanceId.getInstance().getToken().toString());
+        Log.d(TAG, FirebaseInstanceId.getInstance().getToken().toString());
+
+        mStompClient = Stomp.over(WebSocket.class, "ws://trvlr.ch:8080/socket", mStompHeaders);
 
         mStompClient.lifecycle().subscribe(new Action1<LifecycleEvent>() {
             @Override
@@ -53,13 +58,13 @@ public class PublicChatActivity extends AppCompatActivity {
                         break;
 
                     case CLOSED:
-                        Log.d(TAG, "Stomp connection closed: " + lifecycleEvent.getMessage());
+                        Log.d(TAG, "Stomp connection closed: " + lifecycleEvent.getHandshakeResponseHeaders());
                         break;
                 }
             }
         });
 
-        FirebaseInstanceId.getInstance().getToken();
+        mStompClient.connect();
 
         mStompClient.topic("/topic/chat/" + roomID).subscribe(new Action1<StompMessage>() {
             @Override
@@ -69,7 +74,9 @@ public class PublicChatActivity extends AppCompatActivity {
             }
         });
 
-        mStompClient.connect();
+        mStompClient.send("/topic/hello-msg-mapping", "My first STOMP message!").subscribe();
+
+
 
         sendButton.setOnClickListener(new View.OnClickListener() {
             @Override
