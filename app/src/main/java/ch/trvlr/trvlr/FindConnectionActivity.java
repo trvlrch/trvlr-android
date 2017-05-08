@@ -4,8 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
-import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.android.volley.Response;
@@ -22,7 +22,6 @@ import static com.android.volley.Request.Method;
 
 public class FindConnectionActivity extends BaseDrawerActivity {
 
-    private Spinner fromInp, toInp;
     private Button btnfindConn;
     private JSONObject result;
     private int chatId;
@@ -40,11 +39,12 @@ public class FindConnectionActivity extends BaseDrawerActivity {
         btnfindConn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // get user inputs from spinners from and to
-                Spinner fromSpin = (Spinner) findViewById(R.id.fromSpin);
-                Spinner toSpin = (Spinner) findViewById(R.id.toSpin);
-                String from = fromSpin.getSelectedItem().toString();
-                String to = toSpin.getSelectedItem().toString();
+                // Get from and to user inputs.
+                AutoCompleteTextView fromTextView = (AutoCompleteTextView) findViewById(R.id.fromAutocomplete);
+                AutoCompleteTextView toTextView = (AutoCompleteTextView) findViewById(R.id.toAutocomplete);
+
+                String from = fromTextView.getText().toString();
+                String to = toTextView.getText().toString();
 
                 if(from.equals(to)){
                     Toast.makeText(FindConnectionActivity.this, "invalid connection", Toast.LENGTH_LONG).show();
@@ -120,16 +120,19 @@ public class FindConnectionActivity extends BaseDrawerActivity {
                             stations.add(response.getJSONObject(i).getString("name"));
                         }
 
-                        // put values into spinners
-                        Spinner fromSpin = (Spinner) findViewById(R.id.fromSpin);
-                        ArrayAdapter<String> fromspinnerArrayAdapter = new ArrayAdapter<String>(FindConnectionActivity.this, android.R.layout.simple_spinner_item, stations); //selected item will look like a spinner set from XML
-                        fromspinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                        fromSpin.setAdapter(fromspinnerArrayAdapter);
+                        // Put values into autocomplete text views.
 
-                        Spinner toSpin = (Spinner) findViewById(R.id.toSpin);
-                        ArrayAdapter<String> tospinnerArrayAdapter = new ArrayAdapter<String>(FindConnectionActivity.this, android.R.layout.simple_spinner_item, stations); //selected item will look like a spinner set from XML
-                        tospinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                        toSpin.setAdapter(tospinnerArrayAdapter);
+                        // From autocomplete.
+                        ArrayAdapter<String> fromAdapter = new ArrayAdapter<String>(FindConnectionActivity.this,
+                                android.R.layout.simple_dropdown_item_1line, stations);
+                        AutoCompleteTextView fromTextView = (AutoCompleteTextView) findViewById(R.id.fromAutocomplete);
+                        fromTextView.setAdapter(fromAdapter);
+
+                        // To autocomplete.
+                        ArrayAdapter<String> toAdapter = new ArrayAdapter<String>(FindConnectionActivity.this,
+                                android.R.layout.simple_dropdown_item_1line, stations);
+                        AutoCompleteTextView toTextView = (AutoCompleteTextView) findViewById(R.id.toAutocomplete);
+                        toTextView.setAdapter(toAdapter);
                     }
                 } catch (JSONException e) {
                     Toast.makeText(FindConnectionActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();

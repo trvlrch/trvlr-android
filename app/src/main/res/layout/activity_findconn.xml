@@ -33,8 +33,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <Spinner
-                android:id="@+id/fromSpin"
+            <AutoCompleteTextView
+                android:id="@+id/fromAutocomplete"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="40dp"
@@ -54,8 +54,8 @@
             android:layout_height="wrap_content"
             android:text="To" />
 
-        <Spinner
-            android:id="@+id/toSpin"
+        <AutoCompleteTextView
+            android:id="@+id/toAutocomplete"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="40dp"
