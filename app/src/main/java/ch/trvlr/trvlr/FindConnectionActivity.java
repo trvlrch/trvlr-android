@@ -1,39 +1,28 @@
 package ch.trvlr.trvlr;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
-import android.widget.SpinnerAdapter;
 import android.widget.Toast;
 
-import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
-import java.net.URL;
 import java.util.ArrayList;
 
 import static com.android.volley.Request.*;
 
-public class FindConnectionActivity extends AppCompatActivity {
+public class FindConnectionActivity extends BaseDrawerActivity {
 
     private Spinner fromInp, toInp;
     private Button btnfindConn;
@@ -45,8 +34,8 @@ public class FindConnectionActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_findconn);
-
+        getLayoutInflater().inflate(R.layout.activity_findconn, mFrameLayout);
+        setTitle("Find connection");
 
         btnfindConn = (Button) findViewById(R.id.btn_findConn);
 //        fromInp = (Spinner) findViewById(R.layout.activity_findconn.fromSpin);
@@ -116,7 +105,7 @@ public class FindConnectionActivity extends AppCompatActivity {
                     }
 
                     else{
-                        Intent intent = new Intent(getApplicationContext(), PublicChat.class);
+                        Intent intent = new Intent(getApplicationContext(), PublicChatActivity.class);
                         Bundle b = new Bundle();
                         b.putInt("chatId", response.getJSONObject(0).getInt("id"));
                         intent.putExtras(b);
@@ -142,5 +131,18 @@ public class FindConnectionActivity extends AppCompatActivity {
                 Toast.makeText(FindConnectionActivity.this, error.getMessage(), Toast.LENGTH_SHORT).show();
             }
         };
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // to check current activity in the navigation drawer
+        // id 0 for drawer because no chat will have id 0
+        mNavigationView.getMenu().findItem(0).setChecked(true);
+    }
+
+    @Override
+    protected int getMenuId() {
+        return 0;
     }
 }

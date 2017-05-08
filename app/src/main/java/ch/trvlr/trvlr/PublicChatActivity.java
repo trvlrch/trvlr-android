@@ -15,13 +15,14 @@ import okhttp3.Response;
 import okhttp3.WebSocket;
 import okhttp3.WebSocketListener;
 
-public class PublicChatActivity extends AppCompatActivity {
+public class PublicChatActivity extends BaseDrawerActivity {
     private static final String TAG = "PublicChatActivity";
     private Button sendButton;
     private TextView chatOutput;
     private EditText chatText;
     private OkHttpClient client;
     private WebSocket websocket;
+    private int chatId;
 
 
     private final class ChatWebSocketListener extends WebSocketListener {
@@ -64,9 +65,9 @@ public class PublicChatActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_public_chat);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        getLayoutInflater().inflate(R.layout.activity_public_chat, mFrameLayout);
+        setTitle(TAG); // TODO get chat name
+
         sendButton = (Button) findViewById(R.id.sendButton);
         chatOutput = (TextView) findViewById(R.id.chatOutput);
         chatText = (EditText) findViewById(R.id.chatText);
@@ -102,4 +103,16 @@ public class PublicChatActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // to check current activity in the navigation drawer
+        // id 0 for drawer because no chat will have id 0
+        mNavigationView.getMenu().findItem(chatId).setChecked(true);
+    }
+
+    @Override
+    protected int getMenuId() {
+        return 1; // return actual chatId
+    }
 }

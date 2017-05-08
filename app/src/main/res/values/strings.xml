@@ -34,4 +34,6 @@
     <string name="title_activity_public_chat">Public chat</string>
     <string name="loading">Loading...</string>
     <string name="find_your_connection">Find your connection!</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
 </resources>
