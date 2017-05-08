@@ -11,7 +11,6 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.SubMenu;
 import android.widget.FrameLayout;
 
 public class BaseDrawerActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
@@ -70,11 +69,7 @@ public class BaseDrawerActivity extends AppCompatActivity implements NavigationV
         if (id == 0) {
             startActivity(new Intent(getApplicationContext(), FindConnectionActivity.class));
         } else {
-            Intent intent = new Intent(getApplicationContext(), PublicChatActivity.class);
-            Bundle b = new Bundle();
-            b.putInt("chatId", id);
-            intent.putExtras(b);
-            startActivity(intent);
+            startActivity(new Intent(getApplicationContext(), ListPrivateChatsActivity.class));
         }
         finish();
 
@@ -90,14 +85,8 @@ public class BaseDrawerActivity extends AppCompatActivity implements NavigationV
 
     public void populateMenu(Menu menu){
         menu.clear();
-
-        // id 0 for find connection because no chat will have id 0
         menu.add(0, 0, 0, "Find connection");
-
-        SubMenu publicChats = menu.addSubMenu("Connections");
-        publicChats.add(0, 1, 0, "Zurich - Winterthur");
-
-        SubMenu sMenu = menu.addSubMenu("Private chats");
+        menu.add(0, 1, 0, "Private chats");
     }
 
     @Override
