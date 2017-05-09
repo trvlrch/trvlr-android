@@ -16,6 +16,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 
 import static com.android.volley.Request.Method;
@@ -48,6 +50,13 @@ public class FindConnectionActivity extends BaseDrawerActivity {
 
                 if(from.equals(to)){
                     Toast.makeText(FindConnectionActivity.this, "invalid connection", Toast.LENGTH_LONG).show();
+                }
+
+                try {
+                    from = URLEncoder.encode(from, "UTF-8");
+                    to =  URLEncoder.encode(to, "UTF-8");
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
                 }
 
                 AppController.getInstance().addToRequestQueue(new JsonArrayRequest(Method.GET,
