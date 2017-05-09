@@ -30,7 +30,7 @@
     <string name="forgot_password_msg">We just need your registered Email Id to sent you password reset instructions.</string>
     <string name="from">Starting station</string>
     <string name="to">Destination station</string>
-    <string name="findConn">find connection</string>
+    <string name="findConn">Find connection</string>
     <string name="title_activity_public_chat">Public chat</string>
     <string name="loading">Loading...</string>
     <string name="find_your_connection">Find your connection!</string>

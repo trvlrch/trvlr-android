@@ -42,12 +42,19 @@ public class PublicChatActivity extends BaseDrawerActivity {
     private TextView chatOutput;
     private EditText chatText;
     private StompClient mStompClient;
+    private String chatName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getLayoutInflater().inflate(R.layout.activity_public_chat, mFrameLayout);
-        setTitle(TAG); // TODO get chat name
+        chatName = getIntent().getExtras().getString("chatName");
+        setTitle(chatName);
+
+        // Add this room to the menu.
+        Menu menu = mNavigationView.getMenu();
+        menu.add(0, R.layout.activity_public_chat, 0, chatName);
+
         chatId = getIntent().getExtras().getInt("chatId");
         sendButton = (Button) findViewById(R.id.sendButton);
         chatOutput = (TextView) findViewById(R.id.chatOutput);

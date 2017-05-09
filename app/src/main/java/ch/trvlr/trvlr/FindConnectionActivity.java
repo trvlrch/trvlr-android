@@ -1,8 +1,11 @@
 package ch.trvlr.trvlr;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -26,6 +29,8 @@ public class FindConnectionActivity extends BaseDrawerActivity {
     private Button btnfindConn;
     private JSONObject result;
     private int chatId;
+    private AutoCompleteTextView fromTextView;
+    private AutoCompleteTextView toTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,40 +41,60 @@ public class FindConnectionActivity extends BaseDrawerActivity {
         // while we load the stations, we should show some kind of loading dialog
         getAvailableStations();
 
+        // Assign AutoCompleteTextView elements.
+        fromTextView = (AutoCompleteTextView) findViewById(R.id.fromAutocomplete);
+        toTextView = (AutoCompleteTextView) findViewById(R.id.toAutocomplete);
+
         btnfindConn = (Button) findViewById(R.id.btn_findConn);
         btnfindConn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // Get from and to user inputs.
-                AutoCompleteTextView fromTextView = (AutoCompleteTextView) findViewById(R.id.fromAutocomplete);
-                AutoCompleteTextView toTextView = (AutoCompleteTextView) findViewById(R.id.toAutocomplete);
-
                 String from = fromTextView.getText().toString();
                 String to = toTextView.getText().toString();
+                String encodedFrom = from;
+                String encodedTo = to;
 
                 if(from.equals(to)){
                     Toast.makeText(FindConnectionActivity.this, "invalid connection", Toast.LENGTH_LONG).show();
                 }
 
                 try {
-                    from = URLEncoder.encode(from, "UTF-8");
-                    to =  URLEncoder.encode(to, "UTF-8");
+                    encodedFrom = URLEncoder.encode(from, "UTF-8");
+                    encodedTo =  URLEncoder.encode(to, "UTF-8");
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
                 }
 
                 AppController.getInstance().addToRequestQueue(new JsonArrayRequest(Method.GET,
-                        "http://trvlr.ch:8080/api/public-chats/join/?from=" + from + "&to=" + to,
+                        "http://trvlr.ch:8080/api/public-chats/join/?from=" + encodedFrom + "&to=" + encodedTo,
                         null,
-                        loadPublicChatSuccess(),
+                        loadPublicChatSuccess(from, to),
                         loadError()
                 ));
+            }
+        });
+
+        // Close AutoCompleteTextView elements when selecting an option.
+        fromTextView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+                InputMethodManager in = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                in.hideSoftInputFromWindow(arg1.getApplicationWindowToken(), 0);
+            }
+        });
+
+        toTextView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+                InputMethodManager in = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                in.hideSoftInputFromWindow(arg1.getApplicationWindowToken(), 0);
             }
         });
     }
 
 
-    private Response.Listener<JSONArray> loadPublicChatSuccess() {
+    private Response.Listener<JSONArray> loadPublicChatSuccess(final String from, final String to) {
         return new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
@@ -83,6 +108,7 @@ public class FindConnectionActivity extends BaseDrawerActivity {
                         Intent intent = new Intent(getApplicationContext(), PublicChatActivity.class);
                         Bundle b = new Bundle();
                         b.putInt("chatId", response.getJSONObject(0).getInt("id"));
+                        b.putString("chatName", from + " - " + to);
                         intent.putExtras(b);
                         startActivity(intent);
                     }
