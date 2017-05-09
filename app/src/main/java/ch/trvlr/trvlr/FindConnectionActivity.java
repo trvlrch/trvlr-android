@@ -1,8 +1,11 @@
 package ch.trvlr.trvlr;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -26,6 +29,8 @@ public class FindConnectionActivity extends BaseDrawerActivity {
     private Button btnfindConn;
     private JSONObject result;
     private int chatId;
+    private AutoCompleteTextView fromTextView;
+    private AutoCompleteTextView toTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,14 +41,15 @@ public class FindConnectionActivity extends BaseDrawerActivity {
         // while we load the stations, we should show some kind of loading dialog
         getAvailableStations();
 
+        // Assign AutoCompleteTextView elements.
+        fromTextView = (AutoCompleteTextView) findViewById(R.id.fromAutocomplete);
+        toTextView = (AutoCompleteTextView) findViewById(R.id.toAutocomplete);
+
         btnfindConn = (Button) findViewById(R.id.btn_findConn);
         btnfindConn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // Get from and to user inputs.
-                AutoCompleteTextView fromTextView = (AutoCompleteTextView) findViewById(R.id.fromAutocomplete);
-                AutoCompleteTextView toTextView = (AutoCompleteTextView) findViewById(R.id.toAutocomplete);
-
                 String from = fromTextView.getText().toString();
                 String to = toTextView.getText().toString();
 
@@ -64,6 +70,23 @@ public class FindConnectionActivity extends BaseDrawerActivity {
                         loadPublicChatSuccess(),
                         loadError()
                 ));
+            }
+        });
+
+        // Close AutoCompleteTextView elements when selecting an option.
+        fromTextView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+                InputMethodManager in = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                in.hideSoftInputFromWindow(arg1.getApplicationWindowToken(), 0);
+            }
+        });
+
+        toTextView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+                InputMethodManager in = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                in.hideSoftInputFromWindow(arg1.getApplicationWindowToken(), 0);
             }
         });
     }
