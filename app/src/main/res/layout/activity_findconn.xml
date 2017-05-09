@@ -33,15 +33,16 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <Spinner
-                android:id="@+id/fromSpin"
+            <AutoCompleteTextView
+                android:id="@+id/fromAutocomplete"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="40dp"
                 android:hint="@string/from"
                 android:inputType="text"
                 android:textColor="@android:color/black"
-                android:textColorHint="@android:color/darker_gray" />
+                android:textColorHint="@android:color/darker_gray"
+                android:completionThreshold="1" />
 
         </android.support.design.widget.TextInputLayout>
         </android.support.design.widget.TextInputLayout>
@@ -54,15 +55,16 @@
             android:layout_height="wrap_content"
             android:text="To" />
 
-        <Spinner
-            android:id="@+id/toSpin"
+        <AutoCompleteTextView
+            android:id="@+id/toAutocomplete"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="40dp"
             android:hint="@string/to"
             android:inputType="text"
             android:textColor="@android:color/black"
-            android:textColorHint="@android:color/darker_gray" />
+            android:textColorHint="@android:color/darker_gray"
+            android:completionThreshold="1" />
 
 
         <!--find conn-->
