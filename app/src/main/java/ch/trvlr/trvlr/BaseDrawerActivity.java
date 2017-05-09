@@ -123,13 +123,6 @@ public class BaseDrawerActivity extends AppCompatActivity implements NavigationV
                 i.putExtras(b);
                 startActivity(i);
                 break;
-            case R.layout.activity_public_chat:
-                i = new Intent(getApplicationContext(), ListPublicChatMembersActivity.class);
-                b = new Bundle();
-                b.putInt("chatId", chatId);
-                i.putExtras(b);
-                startActivity(i);
-                break;
             default:
                 Toast.makeText(BaseDrawerActivity.this, "Activity unavailable", Toast.LENGTH_SHORT).show();
         }

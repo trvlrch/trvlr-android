@@ -1,6 +1,8 @@
 package ch.trvlr.trvlr;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -69,6 +71,7 @@ public class PublicChatActivity extends BaseDrawerActivity {
         super.onCreate(savedInstanceState);
         getLayoutInflater().inflate(R.layout.activity_public_chat, mFrameLayout);
         setTitle(TAG); // TODO get chat name
+        chatId = getIntent().getExtras().getInt("chatId");
 
         sendButton = (Button) findViewById(R.id.sendButton);
         chatOutput = (TextView) findViewById(R.id.chatOutput);
@@ -95,9 +98,6 @@ public class PublicChatActivity extends BaseDrawerActivity {
                 });
             }
         });
-
-        Menu menu = mNavigationView.getMenu();
-        menu.add(0, R.layout.activity_public_chat, 0, "List travelers");
     }
 
     private void updateChatOutput(final String text) {
@@ -106,5 +106,25 @@ public class PublicChatActivity extends BaseDrawerActivity {
                 chatOutput.append(text + "\n");
             }
         });
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(final Menu menu) {
+        getMenuInflater().inflate(R.menu.chat, menu);
+
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.list_travelers) {
+            Intent i = new Intent(getApplicationContext(), ListPublicChatMembersActivity.class);
+            Bundle b = new Bundle();
+            b.putInt("chatId", chatId);
+            i.putExtras(b);
+            startActivity(i);
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
