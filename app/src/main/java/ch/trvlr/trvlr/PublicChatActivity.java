@@ -1,5 +1,6 @@
 package ch.trvlr.trvlr;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -18,6 +19,8 @@ import com.google.firebase.auth.GetTokenResult;
 import com.google.firebase.iid.FirebaseInstanceId;
 
 import org.java_websocket.WebSocket;
+import org.json.JSONObject;
+import org.json.JSONStringer;
 
 import rx.functions.Action1;
 import ua.naiksoftware.stomp.LifecycleEvent;
@@ -37,7 +40,7 @@ public class PublicChatActivity extends AppCompatActivity {
     private TextView chatOutput;
     private EditText chatText;
     private StompClient mStompClient;
-    private String roomID;
+    private Integer roomID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +49,7 @@ public class PublicChatActivity extends AppCompatActivity {
         sendButton = (Button) findViewById(R.id.sendButton);
         chatOutput = (TextView) findViewById(R.id.chatOutput);
         chatText = (EditText) findViewById(R.id.chatText);
-        roomID = "1";
+        roomID = getIntent().getExtras().getInt("chatId");
 
         Map mStompHeaders = new HashMap();
         mStompHeaders.put("token", FirebaseInstanceId.getInstance().getToken());
@@ -89,17 +92,14 @@ public class PublicChatActivity extends AppCompatActivity {
 
         mStompClient.connect(headers);
 
-        mStompClient.topic("/topic/chat/" + roomID).subscribe(new Action1<StompMessage>() {
+        mStompClient.topic("/topic/chat/" + roomID)
+                .subscribe(new Action1<StompMessage>() {
             @Override
             public void call(StompMessage topicMessage) {
                 Log.d(TAG, topicMessage.getPayload());
                 updateChatOutput(topicMessage.getPayload());
             }
         });
-
-        mStompClient.send("/topic/hello-msg-mapping", "My first STOMP message!").subscribe();
-
-
 
         sendButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -130,7 +130,8 @@ public class PublicChatActivity extends AppCompatActivity {
     }
 
     public void sendMessage(String message) {
-        mStompClient.send("/app/chat/1", message)
+
+        mStompClient.send("/app/chat/"+roomID, "{\"text\": " + JSONObject.quote(message) + "}")
                 .subscribe(new Action1<Object>() {
                     @Override
                     public void call(Object aVoid) {
@@ -143,5 +144,4 @@ public class PublicChatActivity extends AppCompatActivity {
                     }
                 });
     }
-
 }
