@@ -89,8 +89,8 @@ public class PublicChatActivity extends BaseDrawerActivity {
 
         Log.d(TAG, "our token: " + token);
 
-        StompHeader header = new StompHeader("token", token );
-        List<StompHeader> headers = new LinkedList();
+        StompHeader header = new StompHeader("token", token);
+        List<StompHeader> headers = new LinkedList<StompHeader>();
         headers.add(header);
 
         mStompClient.connect(headers);
