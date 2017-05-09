@@ -17,29 +17,29 @@
         android:weightSum="1">
 
         <ImageView
-            android:layout_width="211dp"
-            android:layout_height="@dimen/logo_w_h"
+            android:layout_width="249dp"
+            android:layout_height="150dp"
             android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="30dp"
-            android:src="@mipmap/trvlr_grey_noframe"
-            android:layout_weight="0.21" />
+            android:layout_marginBottom="10dp"
+            android:src="@mipmap/trvlr_grey_noframe" />
 
         <TextView
             android:id="@+id/slogan"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="0.21"
             android:text="@string/find_your_connection"
             android:textAlignment="center"
             android:textAllCaps="false"
+            android:textAppearance="@android:style/TextAppearance.Material.Large"
             android:textColor="@color/white"
             android:textSize="18sp"
             android:textStyle="italic"
-            tools:text="@string/find_your_connection" />
+            tools:text="@string/find_your_connection"
+            android:layout_marginBottom="10dp"/>
 
         <com.google.android.gms.common.SignInButton
             android:id="@+id/sign_in_button"
-            android:layout_width="wrap_content"
+            android:layout_width="129dp"
             android:layout_height="wrap_content" />
 
     </LinearLayout>
