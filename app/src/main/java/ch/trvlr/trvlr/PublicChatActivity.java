@@ -2,9 +2,9 @@ package ch.trvlr.trvlr;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -86,9 +86,18 @@ public class PublicChatActivity extends AppCompatActivity {
 
         Log.d(TAG, "our token: " + token);
 
+<<<<<<< HEAD
         StompHeader header = new StompHeader("token", token );
         List<StompHeader> headers = new LinkedList();
         headers.add(header);
+=======
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        getLayoutInflater().inflate(R.layout.activity_public_chat, mFrameLayout);
+        setTitle(TAG); // TODO get chat name
+        chatId = getIntent().getExtras().getInt("chatId");
+>>>>>>> e993dfd771b2d576ec6567028f8fdd76ec0f691a
 
         mStompClient.connect(headers);
 
@@ -129,6 +138,7 @@ public class PublicChatActivity extends AppCompatActivity {
         });
     }
 
+<<<<<<< HEAD
     public void sendMessage(String message) {
 
         mStompClient.send("/app/chat/"+roomID, "{\"text\": " + JSONObject.quote(message) + "}")
@@ -143,5 +153,25 @@ public class PublicChatActivity extends AppCompatActivity {
                         Log.e(TAG, "Error send STOMP echo", throwable);
                     }
                 });
+=======
+    @Override
+    public boolean onPrepareOptionsMenu(final Menu menu) {
+        getMenuInflater().inflate(R.menu.chat, menu);
+
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.list_travelers) {
+            Intent i = new Intent(getApplicationContext(), ListPublicChatMembersActivity.class);
+            Bundle b = new Bundle();
+            b.putInt("chatId", chatId);
+            i.putExtras(b);
+            startActivity(i);
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+>>>>>>> e993dfd771b2d576ec6567028f8fdd76ec0f691a
     }
 }

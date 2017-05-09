@@ -9,13 +9,14 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 
 import static com.android.volley.Request.Method;
@@ -50,6 +51,13 @@ public class FindConnectionActivity extends BaseDrawerActivity {
                     Toast.makeText(FindConnectionActivity.this, "invalid connection", Toast.LENGTH_LONG).show();
                 }
 
+                try {
+                    from = URLEncoder.encode(from, "UTF-8");
+                    to =  URLEncoder.encode(to, "UTF-8");
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+
                 AppController.getInstance().addToRequestQueue(new JsonArrayRequest(Method.GET,
                         "http://trvlr.ch:8080/api/public-chats/search/?from=" + from + "&to=" + to,
                         null,
@@ -77,7 +85,6 @@ public class FindConnectionActivity extends BaseDrawerActivity {
                         b.putInt("chatId", response.getJSONObject(0).getInt("id"));
                         intent.putExtras(b);
                         startActivity(intent);
-                        finish();
                     }
                 } catch (JSONException e) {
                     Toast.makeText(FindConnectionActivity.this, "JSON Exception: " + e.getMessage(), Toast.LENGTH_SHORT).show();
@@ -137,7 +144,6 @@ public class FindConnectionActivity extends BaseDrawerActivity {
     protected void onResume() {
         super.onResume();
         // to check current activity in the navigation drawer
-        // id 0 for drawer because no chat will have id 0
         mNavigationView.getMenu().findItem(R.layout.activity_findconn).setChecked(true);
     }
 }
