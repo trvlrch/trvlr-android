@@ -60,7 +60,7 @@ public class FindConnectionActivity extends BaseDrawerActivity {
                 }
 
                 AppController.getInstance().addToRequestQueue(new JsonArrayRequest(Method.GET,
-                        "http://trvlr.ch:8080/api/public-chats/search/?from=" + from + "&to=" + to,
+                        "http://trvlr.ch:8080/api/public-chats/join/?from=" + from + "&to=" + to,
                         null,
                         loadPublicChatSuccess(),
                         loadError()
