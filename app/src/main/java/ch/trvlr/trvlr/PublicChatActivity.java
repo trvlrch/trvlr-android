@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -93,6 +95,9 @@ public class PublicChatActivity extends BaseDrawerActivity {
                 });
             }
         });
+
+        Menu menu = mNavigationView.getMenu();
+        menu.add(0, R.layout.activity_public_chat, 0, "List travelers");
     }
 
     private void updateChatOutput(final String text) {

@@ -15,9 +15,6 @@ import java.util.HashMap;
 
 public class ListPrivateChatsActivity extends BaseListUsersActivity {
 
-    // TODO error handling if no traveler id is given
-    private int travelerId = -1;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,7 +69,6 @@ public class ListPrivateChatsActivity extends BaseListUsersActivity {
     protected void onResume() {
         super.onResume();
         // to check current activity in the navigation drawer
-        // id 0 for drawer because no chat will have id 0
         mNavigationView.getMenu().findItem(R.layout.activity_base_list_users).setChecked(true);
     }
 }
