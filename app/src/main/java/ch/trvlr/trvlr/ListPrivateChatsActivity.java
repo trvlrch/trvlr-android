@@ -15,13 +15,14 @@ import java.util.HashMap;
 
 public class ListPrivateChatsActivity extends BaseListUsersActivity {
 
-    private int travelerId = 1;
+    // TODO error handling if no traveler id is given
+    private int travelerId = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setTitle("Private chats");
-//        travelerId = getIntent().getExtras().getInt("travelerId");
+        travelerId = getIntent().getExtras().getInt("travelerId");
         populateListView();
     }
 
@@ -65,5 +66,13 @@ public class ListPrivateChatsActivity extends BaseListUsersActivity {
             }
         }
         return  travelerName;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // to check current activity in the navigation drawer
+        // id 0 for drawer because no chat will have id 0
+        mNavigationView.getMenu().findItem(R.layout.activity_base_list_users).setChecked(true);
     }
 }

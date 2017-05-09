@@ -86,15 +86,6 @@ public class FindConnectionActivity extends BaseDrawerActivity {
         };
     }
 
-    private Response.ErrorListener loadError() {
-        return new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Toast.makeText(FindConnectionActivity.this, error.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        };
-    }
-
     private void getAvailableStations() {
         AppController.getInstance().addToRequestQueue(new JsonArrayRequest(Method.GET,
                 "http://trvlr.ch:8080/api/stations",
@@ -147,12 +138,6 @@ public class FindConnectionActivity extends BaseDrawerActivity {
         super.onResume();
         // to check current activity in the navigation drawer
         // id 0 for drawer because no chat will have id 0
-        mNavigationView.getMenu().findItem(0).setChecked(true);
+        mNavigationView.getMenu().findItem(R.layout.activity_findconn).setChecked(true);
     }
-
-    @Override
-    protected int getMenuId() {
-        return 0;
-    }
-
 }

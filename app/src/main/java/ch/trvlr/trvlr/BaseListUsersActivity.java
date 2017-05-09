@@ -48,26 +48,6 @@ public abstract class BaseListUsersActivity extends BaseDrawerActivity {
         });
     }
 
-    protected Response.ErrorListener loadError() {
-        return new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Toast.makeText(BaseListUsersActivity.this, error.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        };
-    }
-    @Override
-    protected void onResume() {
-        super.onResume();
-        // to check current activity in the navigation drawer
-        // id 0 for drawer because no chat will have id 0
-        mNavigationView.getMenu().findItem(0).setChecked(true);
-    }
-
-    @Override
-    protected int getMenuId() {
-        return 1;
-    }
 
     protected class ItemWithIdAdapter extends BaseAdapter {
         private final ArrayList mData;

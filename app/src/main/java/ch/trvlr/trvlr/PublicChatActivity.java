@@ -102,17 +102,4 @@ public class PublicChatActivity extends BaseDrawerActivity {
             }
         });
     }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        // to check current activity in the navigation drawer
-        // id 0 for drawer because no chat will have id 0
-        mNavigationView.getMenu().findItem(chatId).setChecked(true);
-    }
-
-    @Override
-    protected int getMenuId() {
-        return 1; // return actual chatId
-    }
 }
