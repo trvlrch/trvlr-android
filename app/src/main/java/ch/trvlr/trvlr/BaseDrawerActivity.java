@@ -55,9 +55,9 @@ public class BaseDrawerActivity extends AppCompatActivity implements NavigationV
         mNavigationView = (NavigationView) findViewById(R.id.nav_view);
         mNavigationView.setNavigationItemSelectedListener(this);
         Menu menu = mNavigationView.getMenu();
-        menu.add(0, R.layout.activity_login, 0, "Logout");
         menu.add(0, R.layout.activity_findconn, 0, "Find connection");
         menu.add(0, R.layout.activity_base_list_users, 0, "Private chats");
+        menu.add(0, R.layout.activity_login, 0, "Logout");
         loadTravelerId();
     }
 
