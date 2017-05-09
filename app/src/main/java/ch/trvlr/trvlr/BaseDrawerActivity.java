@@ -30,6 +30,7 @@ public class BaseDrawerActivity extends AppCompatActivity implements NavigationV
     protected NavigationView mNavigationView;
     protected ActionBarDrawerToggle mDrawerToggle;
     protected int travelerId = -1;
+    protected int chatId = -1;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -104,7 +105,8 @@ public class BaseDrawerActivity extends AppCompatActivity implements NavigationV
         }
 
         uncheckItems(); // TODO maybe there's a better way...
-
+        Intent i;
+        Bundle b;
         switch (id) {
             case R.layout.activity_login:
                 FirebaseAuth.getInstance().signOut();
@@ -113,15 +115,13 @@ public class BaseDrawerActivity extends AppCompatActivity implements NavigationV
                 break;
             case R.layout.activity_findconn:
                 startActivity(new Intent(getApplicationContext(), FindConnectionActivity.class));
-                finish();
                 break;
             case R.layout.activity_base_list_users:
-                Intent i = new Intent(getApplicationContext(), ListPrivateChatsActivity.class);
-                Bundle b = new Bundle();
+                i = new Intent(getApplicationContext(), ListPrivateChatsActivity.class);
+                b = new Bundle();
                 b.putInt("travelerId", travelerId);
                 i.putExtras(b);
                 startActivity(i);
-                finish();
                 break;
             default:
                 Toast.makeText(BaseDrawerActivity.this, "Activity unavailable", Toast.LENGTH_SHORT).show();
@@ -154,13 +154,6 @@ public class BaseDrawerActivity extends AppCompatActivity implements NavigationV
 
         return super.onOptionsItemSelected(item);
     }
-
-//    @Override
-//    public boolean onPrepareOptionsMenu(Menu menu) {
-//        uncheckItems();
-//        mNavigationView.setCheckedItem(this.getMenuId());
-//        return super.onPrepareOptionsMenu(menu);
-//    }
 
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {

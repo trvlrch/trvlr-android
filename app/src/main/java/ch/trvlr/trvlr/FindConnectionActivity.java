@@ -9,7 +9,6 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 
 import org.json.JSONArray;
@@ -86,7 +85,6 @@ public class FindConnectionActivity extends BaseDrawerActivity {
                         b.putInt("chatId", response.getJSONObject(0).getInt("id"));
                         intent.putExtras(b);
                         startActivity(intent);
-                        finish();
                     }
                 } catch (JSONException e) {
                     Toast.makeText(FindConnectionActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
@@ -146,7 +144,6 @@ public class FindConnectionActivity extends BaseDrawerActivity {
     protected void onResume() {
         super.onResume();
         // to check current activity in the navigation drawer
-        // id 0 for drawer because no chat will have id 0
         mNavigationView.getMenu().findItem(R.layout.activity_findconn).setChecked(true);
     }
 }

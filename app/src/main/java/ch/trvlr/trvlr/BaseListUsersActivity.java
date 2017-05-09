@@ -9,13 +9,8 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
 
 public abstract class BaseListUsersActivity extends BaseDrawerActivity {
