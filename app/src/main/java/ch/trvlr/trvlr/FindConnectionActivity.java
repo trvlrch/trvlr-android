@@ -80,7 +80,7 @@ public class FindConnectionActivity extends BaseDrawerActivity {
                         finish();
                     }
                 } catch (JSONException e) {
-                    Toast.makeText(FindConnectionActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(FindConnectionActivity.this, "JSON Exception: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             }
         };
