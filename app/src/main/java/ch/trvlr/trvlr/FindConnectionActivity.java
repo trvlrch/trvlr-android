@@ -52,22 +52,24 @@ public class FindConnectionActivity extends BaseDrawerActivity {
                 // Get from and to user inputs.
                 String from = fromTextView.getText().toString();
                 String to = toTextView.getText().toString();
+                String encodedFrom = from;
+                String encodedTo = to;
 
                 if(from.equals(to)){
                     Toast.makeText(FindConnectionActivity.this, "invalid connection", Toast.LENGTH_LONG).show();
                 }
 
                 try {
-                    from = URLEncoder.encode(from, "UTF-8");
-                    to =  URLEncoder.encode(to, "UTF-8");
+                    encodedFrom = URLEncoder.encode(from, "UTF-8");
+                    encodedTo =  URLEncoder.encode(to, "UTF-8");
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
                 }
 
                 AppController.getInstance().addToRequestQueue(new JsonArrayRequest(Method.GET,
-                        "http://trvlr.ch:8080/api/public-chats/search/?from=" + from + "&to=" + to,
+                        "http://trvlr.ch:8080/api/public-chats/search/?from=" + encodedFrom + "&to=" + encodedTo,
                         null,
-                        loadPublicChatSuccess(),
+                        loadPublicChatSuccess(from, to),
                         loadError()
                 ));
             }
@@ -92,7 +94,7 @@ public class FindConnectionActivity extends BaseDrawerActivity {
     }
 
 
-    private Response.Listener<JSONArray> loadPublicChatSuccess() {
+    private Response.Listener<JSONArray> loadPublicChatSuccess(final String from, final String to) {
         return new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
@@ -106,6 +108,7 @@ public class FindConnectionActivity extends BaseDrawerActivity {
                         Intent intent = new Intent(getApplicationContext(), PublicChatActivity.class);
                         Bundle b = new Bundle();
                         b.putInt("chatId", response.getJSONObject(0).getInt("id"));
+                        b.putString("chatName", from + " - " + to);
                         intent.putExtras(b);
                         startActivity(intent);
                     }
