@@ -9,6 +9,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.google.android.gms.common.api.Result;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthProvider;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GetTokenResult;
 import com.google.firebase.iid.FirebaseInstanceId;
 
 import org.java_websocket.WebSocket;
@@ -16,10 +22,13 @@ import org.java_websocket.WebSocket;
 import rx.functions.Action1;
 import ua.naiksoftware.stomp.LifecycleEvent;
 import ua.naiksoftware.stomp.Stomp;
+import ua.naiksoftware.stomp.StompHeader;
 import ua.naiksoftware.stomp.client.StompClient;
 import ua.naiksoftware.stomp.client.StompMessage;
 
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 public class PublicChatActivity extends AppCompatActivity {
@@ -40,10 +49,12 @@ public class PublicChatActivity extends AppCompatActivity {
         roomID = "1";
 
         Map mStompHeaders = new HashMap();
-        mStompHeaders.put("token", FirebaseInstanceId.getInstance().getToken().toString());
-        Log.d(TAG, FirebaseInstanceId.getInstance().getToken().toString());
+        mStompHeaders.put("token", FirebaseInstanceId.getInstance().getToken());
+        mStompHeaders.put("greetings", "Hoi Mile!");
 
-        mStompClient = Stomp.over(WebSocket.class, "ws://trvlr.ch:8080/socket", mStompHeaders);
+//        Log.d(TAG, FirebaseInstanceId.getInstance().getToken().toString());
+
+        mStompClient = Stomp.over(WebSocket.class, "ws://trvlr.ch:8080/socket/websocket", mStompHeaders);
 
         mStompClient.lifecycle().subscribe(new Action1<LifecycleEvent>() {
             @Override
@@ -64,7 +75,19 @@ public class PublicChatActivity extends AppCompatActivity {
             }
         });
 
-        mStompClient.connect();
+        String token = FirebaseAuth.getInstance()
+                .getCurrentUser()
+                .getToken(false)
+                .getResult()
+                .getToken(); // (ಠ_ಠ)
+
+        Log.d(TAG, "our token: " + token);
+
+        StompHeader header = new StompHeader("token", token );
+        List<StompHeader> headers = new LinkedList();
+        headers.add(header);
+
+        mStompClient.connect(headers);
 
         mStompClient.topic("/topic/chat/" + roomID).subscribe(new Action1<StompMessage>() {
             @Override
