@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -136,9 +137,26 @@ public class PublicChatActivity extends BaseDrawerActivity {
             }
         });
 
-        // Create message adapter for list view.
-        adapter = new MessageAdapter(PublicChatActivity.this, new ArrayList<Message>());
-        messagesContainer.setAdapter(adapter);
+        if (bo.getMessagesContainer() != null) {
+            // Remove current list view
+            ViewGroup currentParent = (ViewGroup) messagesContainer.getParent();
+            int indexContainer = currentParent.indexOfChild(messagesContainer);
+            currentParent.removeView(messagesContainer);
+
+            // We cannot add the list view as long it has a parent
+            messagesContainer = bo.getMessagesContainer();
+            ViewGroup oldParent = (ViewGroup)  messagesContainer.getParent();
+            oldParent.removeView(messagesContainer);
+
+            // Display list view from public chat
+            currentParent.addView(messagesContainer, indexContainer);
+            adapter = (MessageAdapter) messagesContainer.getAdapter();
+        } else {
+            // Create message adapter for list view.
+            adapter = new MessageAdapter(PublicChatActivity.this, new ArrayList<Message>());
+            messagesContainer.setAdapter(adapter);
+            bo.setMessagesContainer(messagesContainer);
+        }
     }
 
     private Message convertJsonToMessage(String payload) {
