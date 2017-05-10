@@ -107,4 +107,14 @@ public class AppController extends Application {
 
         return null;
     }
+
+    public PublicChatBO getPublicChat(String chatName) {
+        for (PublicChatBO i : publicChats) {
+            if (i.getChatName() == chatName) {
+                return i;
+            }
+        }
+
+        return null;
+    }
 }

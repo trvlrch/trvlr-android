@@ -126,9 +126,9 @@ public class BaseDrawerActivity extends AppCompatActivity implements NavigationV
                 break;
             case R.layout.activity_public_chat:
                 i = new Intent(getApplicationContext(), PublicChatActivity.class);
-                b = new Bundle();
-                b.putInt("chatId", chatId);
-                i.putExtras(b);
+                // Get the right bo of this chat room.
+                PublicChatBO bo = ((AppController) getApplication()).getPublicChat(item.getTitle().toString());
+                ((AppController) getApplication()).setCurrentActivePublicChat(bo);
                 startActivity(i);
                 break;
             default:
