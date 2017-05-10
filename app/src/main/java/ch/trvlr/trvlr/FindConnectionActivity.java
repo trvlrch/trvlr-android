@@ -98,18 +98,16 @@ public class FindConnectionActivity extends BaseDrawerActivity {
         return new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
-                // open the chat window (open chat activity screen)
+                // Start the public chat.
                 try {
-
-                    if(response.length() == 0){
+                    if (response.length() == 0) {
                         Toast.makeText(FindConnectionActivity.this, "invalid connection", Toast.LENGTH_LONG).show();
-                    }
-                    else{
+                    } else {
                         Intent intent = new Intent(getApplicationContext(), PublicChatActivity.class);
-                        Bundle b = new Bundle();
-                        b.putInt("chatId", response.getJSONObject(0).getInt("id"));
-                        b.putString("chatName", from + " - " + to);
-                        intent.putExtras(b);
+                        // We always create a new BO.
+                        // TODO check for duplicate connections before executing this code.
+                        PublicChatBO bo = new PublicChatBO(response.getJSONObject(0).getInt("id"), from + " - " + to);
+                        ((AppController) getApplication()).setCurrentActivePublicChat(bo);
                         startActivity(intent);
                     }
                 } catch (JSONException e) {
@@ -132,12 +130,10 @@ public class FindConnectionActivity extends BaseDrawerActivity {
         return new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
-                // open the chat window (open chat activity screen)
                 try {
-
-                    if(response.length() == 0){
+                    if (response.length() == 0) {
                         Toast.makeText(FindConnectionActivity.this, "No available connections", Toast.LENGTH_LONG).show();
-                    } else{
+                    } else {
                         ArrayList<String> stations = new ArrayList<>();
 
                         for (int i = 0; i < response.length(); i++) {

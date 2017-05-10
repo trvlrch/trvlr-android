@@ -31,73 +31,84 @@ public class PublicChatActivity extends BaseDrawerActivity {
     private static final String TAG = "PublicChatActivity";
     private Button sendButton;
     private EditText chatText;
-    private StompClient mStompClient;
     private String chatName;
-    private ListView messagesContainer;
     private MessageAdapter adapter;
+    private PublicChatBO bo;
+
+    // Dynamic data per chat room.
+    private StompClient mStompClient;
+    private ListView messagesContainer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
         getLayoutInflater().inflate(R.layout.activity_public_chat, mFrameLayout);
-
-        // Get data from intent
-        chatName = getIntent().getExtras().getString("chatName");
-        chatId = getIntent().getExtras().getInt("chatId");
-
-        // Set title to connection name
-        setTitle(chatName);
-
-        // Add this room to the menu.
-        Menu menu = mNavigationView.getMenu();
-        menu.add(0, R.layout.activity_public_chat, 0, chatName);
 
         sendButton = (Button) findViewById(R.id.sendButton);
         chatText = (EditText) findViewById(R.id.chatText);
+        messagesContainer = (ListView) findViewById(R.id.messagesContainer);
 
-        mStompClient = Stomp.over(WebSocket.class, "ws://trvlr.ch:8080/socket/websocket");
+        // We always display the chat which is current in the application scope.
+        bo = ((AppController) getApplication()).getCurrentActivePublicChat();
+        chatId = bo.getChatId();
+        chatName = bo.getChatName();
 
-        mStompClient.lifecycle().subscribe(new Action1<LifecycleEvent>() {
-            @Override
-            public void call(LifecycleEvent lifecycleEvent) {
-                switch (lifecycleEvent.getType()) {
-                    case OPENED:
-                        Log.d(TAG, "Stomp connection opened: " + lifecycleEvent.getMessage());
-                        break;
+        // Set the chatroom title.
+        setTitle(chatName);
 
-                    case ERROR:
-                        Log.e(TAG, "Error", lifecycleEvent.getException());
-                        break;
+        if (!bo.isFullyInitialized()) {
+            // This public chat was not initialized fully yet, let's finalze it it.
+            mStompClient = Stomp.over(WebSocket.class, "ws://trvlr.ch:8080/socket/websocket");
+            mStompClient.lifecycle().subscribe(new Action1<LifecycleEvent>() {
+                @Override
+                public void call(LifecycleEvent lifecycleEvent) {
+                    switch (lifecycleEvent.getType()) {
+                        case OPENED:
+                            Log.d(TAG, "Stomp connection opened: " + lifecycleEvent.getMessage());
+                            break;
 
-                    case CLOSED:
-                        Log.d(TAG, "Stomp connection closed: " + lifecycleEvent.getHandshakeResponseHeaders());
-                        break;
+                        case ERROR:
+                            Log.e(TAG, "Error", lifecycleEvent.getException());
+                            break;
+
+                        case CLOSED:
+                            Log.d(TAG, "Stomp connection closed: " + lifecycleEvent.getHandshakeResponseHeaders());
+                            break;
+                    }
                 }
-            }
-        });
+            });
+            String token = FirebaseAuth.getInstance()
+                    .getCurrentUser()
+                    .getToken(false)
+                    .getResult()
+                    .getToken(); // (ಠ_ಠ)
 
-        String token = FirebaseAuth.getInstance()
-                .getCurrentUser()
-                .getToken(false)
-                .getResult()
-                .getToken(); // (ಠ_ಠ)
+            Log.d(TAG, "our token: " + token);
 
-        Log.d(TAG, "our token: " + token);
+            StompHeader header = new StompHeader("token", token);
+            List<StompHeader> headers = new LinkedList<StompHeader>();
+            headers.add(header);
+            mStompClient.connect(headers);
 
-        StompHeader header = new StompHeader("token", token);
-        List<StompHeader> headers = new LinkedList<StompHeader>();
-        headers.add(header);
+            mStompClient.topic("/topic/chat/" + chatId)
+                    .subscribe(new Action1<StompMessage>() {
+                        @Override
+                        public void call(StompMessage topicMessage) {
+                            Log.d(TAG, topicMessage.getPayload());
+                            updateChatOutput(convertJsonToMessage(topicMessage.getPayload()));
+                        }
+                    });
 
-        mStompClient.connect(headers);
-
-        mStompClient.topic("/topic/chat/" + chatId)
-                .subscribe(new Action1<StompMessage>() {
-            @Override
-            public void call(StompMessage topicMessage) {
-                Log.d(TAG, topicMessage.getPayload());
-                updateChatOutput(convertJsonToMessage(topicMessage.getPayload()));
-            }
-        });
+            bo.finishInitialization(mStompClient);
+        } else {
+            // Switching to an existing public chat, load data dynamically.
+            mStompClient = bo.getmStompClient();
+        }
 
         sendButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -125,9 +136,8 @@ public class PublicChatActivity extends BaseDrawerActivity {
             }
         });
 
-        // Create message adapter for list view
+        // Create message adapter for list view.
         adapter = new MessageAdapter(PublicChatActivity.this, new ArrayList<Message>());
-        messagesContainer = (ListView) findViewById(R.id.messagesContainer);
         messagesContainer.setAdapter(adapter);
     }
 

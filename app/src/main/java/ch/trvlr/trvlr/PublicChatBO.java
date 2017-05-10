@@ -12,19 +12,25 @@ public class PublicChatBO {
     private String chatName;
 
     // BO fields.
-    private Button sendButton;
-    private EditText chatText;
     private StompClient mStompClient;
     private ListView messagesContainer;
 
-    public PublicChatBO(int chatId, String chatName, Button sendButton, EditText chatText,
+    // State fields.
+    private boolean fullyInitialized;
+
+    public PublicChatBO(int chatId, String chatName,
                         StompClient mStompClient, ListView messagesContainer) {
         this.chatId = chatId;
         this.chatName = chatName;
-        this.sendButton = sendButton;
-        this.chatText = chatText;
         this.mStompClient = mStompClient;
         this.messagesContainer = messagesContainer;
+        this.fullyInitialized = true;
+    }
+
+    public PublicChatBO(int chatId, String chatName) {
+        this.chatId = chatId;
+        this.chatName = chatName;
+        this.fullyInitialized = false;
     }
 
     public int getChatId() {
@@ -43,22 +49,6 @@ public class PublicChatBO {
         this.chatName = chatName;
     }
 
-    public Button getSendButton() {
-        return sendButton;
-    }
-
-    public void setSendButton(Button sendButton) {
-        this.sendButton = sendButton;
-    }
-
-    public EditText getChatText() {
-        return chatText;
-    }
-
-    public void setChatText(EditText chatText) {
-        this.chatText = chatText;
-    }
-
     public StompClient getmStompClient() {
         return mStompClient;
     }
@@ -73,5 +63,15 @@ public class PublicChatBO {
 
     public void setMessagesContainer(ListView messagesContainer) {
         this.messagesContainer = messagesContainer;
+    }
+
+    public void finishInitialization(StompClient mStompClient/*, ListView messagesContainer*/) {
+        this.mStompClient = mStompClient;
+        //this.messagesContainer = messagesContainer;
+        this.fullyInitialized = true;
+    }
+
+    public boolean isFullyInitialized() {
+        return this.fullyInitialized;
     }
 }

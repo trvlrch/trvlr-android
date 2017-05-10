@@ -18,6 +18,7 @@ public class AppController extends Application {
 
     // Chat activities.
     private LinkedList<PublicChatBO> publicChats;
+    private int currentActivePublicChatId;
 
     @Override
     public void onCreate() {
@@ -26,6 +27,7 @@ public class AppController extends Application {
 
         // Init variables.
         publicChats = new LinkedList<>();
+        currentActivePublicChatId = -1;
 
         // Save instance.
         mInstance = this;
@@ -60,11 +62,49 @@ public class AppController extends Application {
         }
     }
 
+    // ----- Persistent chats.
+
+
+    public int getCurrentActivePublicChatId() {
+        return currentActivePublicChatId;
+    }
+
+    public void setCurrentActivePublicChatId(int currentActivePublicChatId) {
+        this.currentActivePublicChatId = currentActivePublicChatId;
+    }
+
+    public PublicChatBO getCurrentActivePublicChat() {
+        return getPublicChat(getCurrentActivePublicChatId());
+    }
+
+    public void setCurrentActivePublicChat(PublicChatBO bo) {
+        int chatId = bo.getChatId();
+
+        if (getPublicChat(chatId) == null) {
+            // New public chat, add it.
+            addPublicChat(bo);
+        } else {
+            // Existing public chat, nothing to add.
+        }
+
+        setCurrentActivePublicChatId(chatId);
+    }
+
     public void addPublicChat(PublicChatBO bo) {
         publicChats.add(bo);
     }
 
     public LinkedList<PublicChatBO> getPublicChats() {
         return publicChats;
+    }
+
+    public PublicChatBO getPublicChat(int chatId) {
+        for (PublicChatBO i : publicChats) {
+            if (i.getChatId() == chatId) {
+                return i;
+            }
+        }
+
+        return null;
     }
 }
