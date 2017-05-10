@@ -21,7 +21,13 @@ public class AppController extends Application {
 
     @Override
     public void onCreate() {
+        // Call super constructor.
         super.onCreate();
+
+        // Init variables.
+        publicChats = new LinkedList<>();
+
+        // Save instance.
         mInstance = this;
     }
 
