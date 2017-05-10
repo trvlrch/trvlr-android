@@ -7,6 +7,8 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 
+import java.util.LinkedList;
+
 public class AppController extends Application {
 
     public static final String TAG = AppController.class .getSimpleName();
@@ -14,9 +16,20 @@ public class AppController extends Application {
     private RequestQueue mRequestQueue;
     private static AppController mInstance;
 
+    // Chat activities.
+    private LinkedList<PublicChatBO> publicChats;
+    private int currentActivePublicChatId;
+
     @Override
     public void onCreate() {
+        // Call super constructor.
         super.onCreate();
+
+        // Init variables.
+        publicChats = new LinkedList<>();
+        currentActivePublicChatId = -1;
+
+        // Save instance.
         mInstance = this;
     }
 
@@ -47,5 +60,61 @@ public class AppController extends Application {
         if (mRequestQueue != null) {
             mRequestQueue.cancelAll(tag);
         }
+    }
+
+    // ----- Persistent chats.
+
+
+    public int getCurrentActivePublicChatId() {
+        return currentActivePublicChatId;
+    }
+
+    public void setCurrentActivePublicChatId(int currentActivePublicChatId) {
+        this.currentActivePublicChatId = currentActivePublicChatId;
+    }
+
+    public PublicChatBO getCurrentActivePublicChat() {
+        return getPublicChat(getCurrentActivePublicChatId());
+    }
+
+    public void setCurrentActivePublicChat(PublicChatBO bo) {
+        int chatId = bo.getChatId();
+
+        if (getPublicChat(chatId) == null) {
+            // New public chat, add it.
+            addPublicChat(bo);
+        } else {
+            // Existing public chat, nothing to add.
+        }
+
+        setCurrentActivePublicChatId(chatId);
+    }
+
+    public void addPublicChat(PublicChatBO bo) {
+        publicChats.add(bo);
+    }
+
+    public LinkedList<PublicChatBO> getPublicChats() {
+        return publicChats;
+    }
+
+    public PublicChatBO getPublicChat(int chatId) {
+        for (PublicChatBO i : publicChats) {
+            if (i.getChatId() == chatId) {
+                return i;
+            }
+        }
+
+        return null;
+    }
+
+    public PublicChatBO getPublicChat(String chatName) {
+        for (PublicChatBO i : publicChats) {
+            if (i.getChatName() == chatName) {
+                return i;
+            }
+        }
+
+        return null;
     }
 }

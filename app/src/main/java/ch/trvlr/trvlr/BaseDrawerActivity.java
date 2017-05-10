@@ -23,12 +23,15 @@ import com.google.firebase.auth.FirebaseAuth;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.LinkedList;
+
 public class BaseDrawerActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
     protected DrawerLayout mDrawerLayout;
     protected FrameLayout mFrameLayout;
     protected NavigationView mNavigationView;
     protected ActionBarDrawerToggle mDrawerToggle;
+    protected Menu menu;
     protected int travelerId = -1;
     protected int chatId = -1;
 
@@ -54,10 +57,8 @@ public class BaseDrawerActivity extends AppCompatActivity implements NavigationV
 
         mNavigationView = (NavigationView) findViewById(R.id.nav_view);
         mNavigationView.setNavigationItemSelectedListener(this);
-        Menu menu = mNavigationView.getMenu();
-        menu.add(0, R.layout.activity_findconn, 0, "Find connection");
-        menu.add(0, R.layout.activity_base_list_users, 0, "Private chats");
-        menu.add(0, R.layout.activity_login, 0, "Logout");
+        menu = mNavigationView.getMenu();
+        rebuildMenu();
         loadTravelerId();
     }
 
@@ -125,9 +126,9 @@ public class BaseDrawerActivity extends AppCompatActivity implements NavigationV
                 break;
             case R.layout.activity_public_chat:
                 i = new Intent(getApplicationContext(), PublicChatActivity.class);
-                b = new Bundle();
-                b.putInt("chatId", chatId);
-                i.putExtras(b);
+                // Get the right bo of this chat room.
+                PublicChatBO bo = ((AppController) getApplication()).getPublicChat(item.getTitle().toString());
+                ((AppController) getApplication()).setCurrentActivePublicChat(bo);
                 startActivity(i);
                 break;
             default:
@@ -151,6 +152,25 @@ public class BaseDrawerActivity extends AppCompatActivity implements NavigationV
                 Toast.makeText(BaseDrawerActivity.this, error.getMessage(), Toast.LENGTH_SHORT).show();
             }
         };
+    }
+
+    protected void rebuildMenu() {
+        // Clear menus.
+        menu.clear();
+
+        // Add default menus.
+        menu.add(Menu.NONE, R.layout.activity_findconn, Menu.NONE, "Find connection");
+        menu.add(Menu.NONE, R.layout.activity_base_list_users, Menu.NONE, "Private chats");
+
+        // Add public chat menus.
+        LinkedList<PublicChatBO> publicChats = ((AppController) this.getApplication()).getPublicChats();
+
+        for (PublicChatBO bo : publicChats) {
+            menu.add(Menu.NONE, R.layout.activity_public_chat, Menu.NONE, bo.getChatName());
+        }
+
+        // Add logout menu.
+        menu.add(Menu.NONE, R.layout.activity_login, Menu.NONE, "Logout");
     }
 
     @Override
