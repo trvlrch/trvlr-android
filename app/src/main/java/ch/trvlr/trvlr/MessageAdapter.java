@@ -1,6 +1,8 @@
 package ch.trvlr.trvlr;
 
+import android.graphics.Color;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -53,8 +55,9 @@ public class MessageAdapter extends BaseAdapter {
         }
 
         setAlignment(holder, message.isMyMessage());
-        holder.txtMessage.setText(message.getText());
-        holder.txtInfo.setText(message.getAuthor() + " - " + new SimpleDateFormat("dd.MM.yyyy HH:mm").format(message.getTimestamp()));
+        holder.textMessage.setText(message.getText());
+        holder.textAuthor.setText(message.getAuthor());
+        holder.textTime.setText(new SimpleDateFormat("HH:mm").format(message.getTimestamp()));
 
         return view;
     }
@@ -63,62 +66,79 @@ public class MessageAdapter extends BaseAdapter {
         this.messages.add(message);
     }
 
+    int bla = 0;
     private void setAlignment(ViewHolder holder, boolean isMe) {
         if (isMe) {
+            // Set 9 patch image as background and align chat bubble to the right
             holder.contentWithBG.setBackgroundResource(R.drawable.bubble_green);
             LinearLayout.LayoutParams layoutParams =
                     (LinearLayout.LayoutParams) holder.contentWithBG.getLayoutParams();
             layoutParams.gravity = Gravity.RIGHT;
             holder.contentWithBG.setLayoutParams(layoutParams);
 
+            // Align text in chat bubble and set text color to white
             RelativeLayout.LayoutParams lp =
                     (RelativeLayout.LayoutParams) holder.content.getLayoutParams();
             lp.addRule(RelativeLayout.ALIGN_PARENT_LEFT, 0);
             lp.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
             holder.content.setLayoutParams(lp);
-            layoutParams = (LinearLayout.LayoutParams) holder.txtMessage.getLayoutParams();
+            layoutParams = (LinearLayout.LayoutParams) holder.textMessage.getLayoutParams();
             layoutParams.gravity = Gravity.RIGHT;
-            holder.txtMessage.setLayoutParams(layoutParams);
-            holder.txtMessage.setTextColor(ContextCompat.getColor(context, R.color.white));
+            holder.textMessage.setLayoutParams(layoutParams);
+            holder.textMessage.setTextColor(ContextCompat.getColor(context, R.color.white));
 
-            layoutParams = (LinearLayout.LayoutParams) holder.txtInfo.getLayoutParams();
-            layoutParams.gravity = Gravity.RIGHT;
-            holder.txtInfo.setLayoutParams(layoutParams);
+            // Hide author and change height for a more appropriate padding
+            holder.textAuthor.setVisibility(View.INVISIBLE);
+            layoutParams = (LinearLayout.LayoutParams) holder.textAuthor.getLayoutParams();
+            layoutParams.height = 10;
+            holder.textAuthor.setLayoutParams(layoutParams);
+
+            // Change color of time
+            holder.textTime.setTextColor(ContextCompat.getColor(context, R.color.white));
         } else {
+            // Set 9 patch image as background and align chat bubble to the left
             holder.contentWithBG.setBackgroundResource(R.drawable.bubble_gray);
             LinearLayout.LayoutParams layoutParams =
                     (LinearLayout.LayoutParams) holder.contentWithBG.getLayoutParams();
             layoutParams.gravity = Gravity.LEFT;
             holder.contentWithBG.setLayoutParams(layoutParams);
 
+            // Align text in chat bubble and set text color to black
             RelativeLayout.LayoutParams lp =
                     (RelativeLayout.LayoutParams) holder.content.getLayoutParams();
             lp.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, 0);
             lp.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
             holder.content.setLayoutParams(lp);
-            layoutParams = (LinearLayout.LayoutParams) holder.txtMessage.getLayoutParams();
+            layoutParams = (LinearLayout.LayoutParams) holder.textMessage.getLayoutParams();
             layoutParams.gravity = Gravity.LEFT;
-            holder.txtMessage.setLayoutParams(layoutParams);
-            holder.txtMessage.setTextColor(ContextCompat.getColor(context, R.color.black_text));
+            holder.textMessage.setLayoutParams(layoutParams);
+            holder.textMessage.setTextColor(ContextCompat.getColor(context, R.color.black_text));
 
-            layoutParams = (LinearLayout.LayoutParams) holder.txtInfo.getLayoutParams();
-            layoutParams.gravity = Gravity.LEFT;
-            holder.txtInfo.setLayoutParams(layoutParams);
+            // Hide author and make sure the textView has enough space for the text
+            holder.textAuthor.setVisibility(View.VISIBLE);
+            layoutParams = (LinearLayout.LayoutParams) holder.textAuthor.getLayoutParams();
+            layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+            holder.textAuthor.setLayoutParams(layoutParams);
+
+            // Change color of time
+            holder.textTime.setTextColor(Color.GRAY);
         }
     }
 
     private ViewHolder createViewHolder(View v) {
         ViewHolder holder = new ViewHolder();
-        holder.txtMessage = (TextView) v.findViewById(R.id.txtMessage);
+        holder.textMessage = (TextView) v.findViewById(R.id.textMessage);
         holder.content = (LinearLayout) v.findViewById(R.id.content);
         holder.contentWithBG = (LinearLayout) v.findViewById(R.id.contentWithBackground);
-        holder.txtInfo = (TextView) v.findViewById(R.id.txtInfo);
+        holder.textAuthor = (TextView) v.findViewById(R.id.textAuthor);
+        holder.textTime = (TextView) v.findViewById(R.id.textTime);
         return holder;
     }
 
     private class ViewHolder {
-        public TextView txtMessage;
-        public TextView txtInfo;
+        public TextView textMessage;
+        public TextView textAuthor;
+        public TextView textTime;
         public LinearLayout content;
         public LinearLayout contentWithBG;
     }
