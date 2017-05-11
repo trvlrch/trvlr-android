@@ -2,6 +2,7 @@ package ch.trvlr.trvlr;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -11,7 +12,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.GetTokenResult;
 import com.google.gson.Gson;
 
 import org.java_websocket.WebSocket;
@@ -83,18 +87,22 @@ public class PublicChatActivity extends BaseDrawerActivity {
                     }
                 }
             });
-            String token = FirebaseAuth.getInstance()
+
+            FirebaseAuth.getInstance()
                     .getCurrentUser()
                     .getToken(false)
-                    .getResult()
-                    .getToken(); // (ಠ_ಠ)
-
-            Log.d(TAG, "our token: " + token);
-
-            StompHeader header = new StompHeader("token", token);
-            List<StompHeader> headers = new LinkedList<StompHeader>();
-            headers.add(header);
-            mStompClient.connect(headers);
+                    .addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task task) {
+                            GetTokenResult tokenResult = (GetTokenResult) task.getResult();
+                            String token = tokenResult.getToken();
+                            StompHeader header = new StompHeader("token", token);
+                            List<StompHeader> headers = new LinkedList<>();
+                            headers.add(header);
+                            Log.d(TAG, "This is my token: " + token);
+                            mStompClient.connect(headers);
+                        }
+                    });
 
             mStompClient.topic("/topic/chat/" + chatId)
                     .subscribe(new Action1<StompMessage>() {
