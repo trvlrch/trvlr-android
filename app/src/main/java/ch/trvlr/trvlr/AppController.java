@@ -133,11 +133,16 @@ public class AppController extends Application {
     public void addChat(int chatType, ChatBO bo) {
         switch (chatType) {
             case CHATROOM_TYPE_PUBLIC:
-                this.publicChats.add(bo);
+                if (getChat(CHATROOM_TYPE_PUBLIC, bo.getChatId()) == null) {
+                    this.publicChats.add(bo);
+                }
+
                 break;
 
             case CHATROOM_TYPE_PRIVATE:
-                this.privateChats.add(bo);
+                if (getChat(CHATROOM_TYPE_PRIVATE, bo.getChatId()) == null) {
+                    this.privateChats.add(bo);
+                }
                 break;
         }
     }
@@ -255,9 +260,6 @@ public class AppController extends Application {
     }
 
     public void addPrivateChat(ChatBO bo) {
-        if (getChat(CHATROOM_TYPE_PRIVATE, bo.getChatId()) == null) {
-            // Only add of it's not added yet.
-            addChat(CHATROOM_TYPE_PRIVATE, bo);
-        }
+        addChat(CHATROOM_TYPE_PRIVATE, bo);
     }
 }

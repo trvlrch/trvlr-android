@@ -100,7 +100,15 @@ public class BaseDrawerActivity extends AppCompatActivity implements NavigationV
                     AppController.getInstance().addToRequestQueue(new JsonArrayRequest(Request.Method.GET,
                             "http://trvlr.ch:8080/api/private-chats/list/" + currentUser.getId(),
                             null,
-                            loadTravelerPrivateChatsSuccess(),
+                            loadTravelerChatsSuccess(AppController.CHATROOM_TYPE_PRIVATE),
+                            loadError()
+                    ));
+
+                    // Load the public chats of this user.
+                    AppController.getInstance().addToRequestQueue(new JsonArrayRequest(Request.Method.GET,
+                            "http://trvlr.ch:8080/api/public-chats/list/" + currentUser.getId(),
+                            null,
+                            loadTravelerChatsSuccess(AppController.CHATROOM_TYPE_PUBLIC),
                             loadError()
                     ));
                 } catch (JSONException e) {
@@ -110,30 +118,38 @@ public class BaseDrawerActivity extends AppCompatActivity implements NavigationV
         };
     }
 
-    private Response.Listener<JSONArray> loadTravelerPrivateChatsSuccess() {
+    private Response.Listener<JSONArray> loadTravelerChatsSuccess(final int chatType) {
         return new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
                 try {
                     if (response.length() == 0) {
-                        Toast.makeText(BaseDrawerActivity.this, "Can not load private chats", Toast.LENGTH_LONG).show();
+                        Toast.makeText(BaseDrawerActivity.this, "Can not chats (Type: " + chatType + ")", Toast.LENGTH_LONG).show();
                     } else {
-                        LinkedList<ChatBO> privateChats = new LinkedList<>();
-
                         for (int i = 0; i < response.length(); i++) {
-                            JSONArray travelers = response.getJSONObject(i).getJSONArray("allTravelers");
-                            int uId1 = travelers.getJSONObject(0).getInt("id");
-                            int uId2 = travelers.getJSONObject(1).getInt("id");
-                            int indexToLoad = uId1 != currentUser.getId() ? 0 : 1;
-                            TravelerBO chatPartner = new TravelerBO(
-                                    travelers.getJSONObject(indexToLoad).getInt("id"),
-                                    travelers.getJSONObject(indexToLoad).getString("firstName"),
-                                    travelers.getJSONObject(indexToLoad).getString("lastName"),
-                                    travelers.getJSONObject(indexToLoad).getString("email"),
-                                    travelers.getJSONObject(indexToLoad).getString("uid")
-                            );
-                            ChatBO bo = new ChatBO(response.getJSONObject(i).getInt("id"), chatPartner.getFullname(), chatPartner);
-                            AppController.getInstance().addPrivateChat(bo);
+                            ChatBO bo = null;
+
+                            if (chatType == AppController.CHATROOM_TYPE_PRIVATE) {
+                                JSONArray travelers = response.getJSONObject(i).getJSONArray("allTravelers");
+                                int uId1 = travelers.getJSONObject(0).getInt("id");
+                                int uId2 = travelers.getJSONObject(1).getInt("id");
+                                int indexToLoad = uId1 != currentUser.getId() ? 0 : 1;
+                                TravelerBO chatPartner = new TravelerBO(
+                                        travelers.getJSONObject(indexToLoad).getInt("id"),
+                                        travelers.getJSONObject(indexToLoad).getString("firstName"),
+                                        travelers.getJSONObject(indexToLoad).getString("lastName"),
+                                        travelers.getJSONObject(indexToLoad).getString("email"),
+                                        travelers.getJSONObject(indexToLoad).getString("uid")
+                                );
+                                bo = new ChatBO(response.getJSONObject(i).getInt("id"), chatPartner.getFullname(), chatPartner);
+                            } else {
+                                String from = response.getJSONObject(i).getJSONObject("from").getString("name");
+                                String to = response.getJSONObject(i).getJSONObject("to").getString("name");
+
+                                bo = new ChatBO(response.getJSONObject(i).getInt("id"), from + " - " + to, ChatBO.CHATROOM_TYPE_PUBLIC);
+                            }
+
+                            AppController.getInstance().addChat(chatType, bo);
                         }
 
                         rebuildMenu();
