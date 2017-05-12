@@ -9,9 +9,11 @@ import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import static com.android.volley.Request.Method;
 
@@ -40,7 +42,7 @@ public class ListPublicChatMembersActivity extends BaseListUsersActivity {
                 int uid1 = currentUser.getId();
                 int uid2 = traveler.getId();
 
-                AppController.getInstance().addToRequestQueue(new JsonArrayRequest(Method.GET,
+                AppController.getInstance().addToRequestQueue(new JsonObjectRequest(Method.GET,
                         "http://trvlr.ch:8080/api/private-chats/" + uid1 + "/" + uid2,
                         null,
                         loadPrivateChatSuccess(),
@@ -90,16 +92,16 @@ public class ListPublicChatMembersActivity extends BaseListUsersActivity {
         };
     }
 
-    protected Response.Listener<JSONArray> loadPrivateChatSuccess() {
-        return new Response.Listener<JSONArray>() {
+    protected Response.Listener<JSONObject> loadPrivateChatSuccess() {
+        return new Response.Listener<JSONObject>() {
             @Override
-            public void onResponse(JSONArray response) {
+            public void onResponse(JSONObject response) {
                 try {
                     Intent intent = new Intent(getApplicationContext(), PublicChatActivity.class);
                     // We always create a new BO.
                     // TODO: Actually, we don't.
-                    int chatId = response.getJSONObject(0).getInt("id");
-                    JSONArray travelers = response.getJSONObject(0).getJSONArray("allTravelers");
+                    int chatId = response.getInt("id");
+                    JSONArray travelers = response.getJSONArray("allTravelers");
                     int uId1 = travelers.getJSONObject(0).getInt("id");
                     int uId2 = travelers.getJSONObject(1).getInt("id");
                     int indexToLoad = uId1 != currentUser.getId() ? 0 : 1;
