@@ -2,16 +2,9 @@ package ch.trvlr.trvlr;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.BaseAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
-
-import java.util.ArrayList;
-import java.util.Map;
 
 public abstract class BaseListUsersActivity extends BaseDrawerActivity {
 
@@ -41,41 +34,5 @@ public abstract class BaseListUsersActivity extends BaseDrawerActivity {
 
             }
         });
-    }
-
-
-    protected class ItemWithIdAdapter extends BaseAdapter {
-        private final ArrayList mData;
-
-        public ItemWithIdAdapter(Map<Integer, String> map) {
-            mData = new ArrayList();
-            mData.addAll(map.entrySet());
-        }
-
-        @Override
-        public int getCount() {
-            return mData.size();
-        }
-
-        @Override
-        public Map.Entry<Integer, String> getItem(int position) {
-            return (Map.Entry) mData.get(position);
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return getItem(position).getKey();
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            View result = LayoutInflater.from(parent.getContext()).inflate(android.R.layout.simple_list_item_1, parent, false);
-
-            Map.Entry<Integer, String> item = getItem(position);
-
-            ((TextView)result.findViewById(android.R.id.text1)).setText(item.getValue());
-
-            return result;
-        }
     }
 }

@@ -34,6 +34,7 @@ public class BaseDrawerActivity extends AppCompatActivity implements NavigationV
     protected Menu menu;
     protected int travelerId = -1;
     protected int chatId = -1;
+    protected TravelerBO currentUser = null;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -80,6 +81,14 @@ public class BaseDrawerActivity extends AppCompatActivity implements NavigationV
             public void onResponse(JSONObject response) {
                 try {
                     travelerId = response.getInt("id");
+
+                    currentUser = new TravelerBO(
+                        response.getInt("id"),
+                        response.getString("firstName"),
+                        response.getString("lastName"),
+                        response.getString("email"),
+                        response.getString("uid")
+                    );
                 } catch (JSONException e) {
                     Toast.makeText(BaseDrawerActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
                 }

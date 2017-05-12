@@ -1,6 +1,7 @@
 package ch.trvlr.trvlr;
 
 import android.os.Bundle;
+import android.util.SparseArray;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -10,8 +11,6 @@ import com.android.volley.toolbox.JsonArrayRequest;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.HashMap;
 
 public class ListPrivateChatsActivity extends BaseListUsersActivity {
 
@@ -37,15 +36,21 @@ public class ListPrivateChatsActivity extends BaseListUsersActivity {
             @Override
             public void onResponse(JSONArray response) {
                 try {
-                    HashMap<Integer, String> map = new HashMap<>();
+                    SparseArray<TravelerBO> sparseArray = new SparseArray<TravelerBO>();
 
                     for (int i = 0; i < response.length(); i++) {
-                        int chatId = response.getJSONObject(i).getInt("id");
-                        String name = getOtherTraveler(response.getJSONObject(i));
-                        map.put(chatId, name);
+                        TravelerBO traveler = new TravelerBO(
+                            response.getJSONObject(i).getInt("id"),
+                            response.getJSONObject(i).getString("firstName"),
+                            response.getJSONObject(i).getString("lastName"),
+                            response.getJSONObject(i).getString("email"),
+                            response.getJSONObject(i).getString("uid")
+                        );
+
+                        sparseArray.put(traveler.getId(), traveler);
                     }
 
-                    ItemWithIdAdapter adapter = new ItemWithIdAdapter(map);
+                    TravelerAdapter adapter = new TravelerAdapter(sparseArray);
                     mListView.setAdapter(adapter);
                 } catch (JSONException e) {
                     Toast.makeText(ListPrivateChatsActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
