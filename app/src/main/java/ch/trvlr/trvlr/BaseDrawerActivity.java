@@ -11,6 +11,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.SubMenu;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
@@ -224,22 +225,26 @@ public class BaseDrawerActivity extends AppCompatActivity implements NavigationV
         menu.clear();
 
         // Add default menu items.
-        menu.add(Menu.NONE, R.layout.activity_findconn, Menu.NONE, "Find connection");
+        SubMenu startChattingMenu = menu.addSubMenu("Get started");
+        startChattingMenu.add(Menu.NONE, R.layout.activity_findconn, Menu.NONE, "Find connection");
 
         // Add public chat menu items.
+        SubMenu publicChatsMenu = menu.addSubMenu("Public chats");
         LinkedList<ChatBO> publicChats = ((AppController) this.getApplication()).getPublicChats();
         for (ChatBO bo : publicChats) {
-            menu.add(Menu.NONE, R.layout.activity_chat, Menu.NONE, bo.getChatName());
+            publicChatsMenu.add(Menu.NONE, R.layout.activity_chat, Menu.NONE, bo.getChatName());
         }
 
         // Add private chat menu items.
+        SubMenu privateChatsMenu = menu.addSubMenu("Private chats");
         LinkedList<ChatBO> privateChats = ((AppController) this.getApplication()).getPrivateChats();
         for (ChatBO bo : privateChats) {
-            menu.add(Menu.NONE, R.layout.activity_chat, Menu.NONE, bo.getChatName());
+            privateChatsMenu.add(Menu.NONE, R.layout.activity_chat, Menu.NONE, bo.getChatName());
         }
 
         // Add logout menu item.
-        menu.add(Menu.NONE, R.layout.activity_login, Menu.NONE, "Logout");
+        SubMenu settingsMenu = menu.addSubMenu("Settings");
+        settingsMenu.add(Menu.NONE, R.layout.activity_login, Menu.NONE, "Logout");
     }
 
     @Override
