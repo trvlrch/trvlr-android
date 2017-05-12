@@ -19,7 +19,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".PublicChatActivity"
+            android:name=".ChatActivity"
             android:label="@string/title_activity_public_chat"
             android:windowSoftInputMode="adjustResize"
             android:theme="@style/AppTheme"

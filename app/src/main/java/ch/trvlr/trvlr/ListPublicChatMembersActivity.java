@@ -97,7 +97,7 @@ public class ListPublicChatMembersActivity extends BaseListUsersActivity {
             @Override
             public void onResponse(JSONObject response) {
                 try {
-                    Intent intent = new Intent(getApplicationContext(), PublicChatActivity.class);
+                    Intent intent = new Intent(getApplicationContext(), ChatActivity.class);
                     // We always create a new BO.
                     // TODO: Actually, we don't.
                     int chatId = response.getInt("id");

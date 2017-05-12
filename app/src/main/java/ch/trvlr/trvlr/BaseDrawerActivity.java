@@ -137,7 +137,7 @@ public class BaseDrawerActivity extends AppCompatActivity implements NavigationV
                 startActivity(i);
                 break;
             case R.layout.activity_chat:
-                i = new Intent(getApplicationContext(), PublicChatActivity.class);
+                i = new Intent(getApplicationContext(), ChatActivity.class);
                 // Get the right bo of this chat room.
                 ChatBO bo = ((AppController) getApplication()).getPublicChat(item.getTitle().toString());
                 ((AppController) getApplication()).setCurrentActivePublicChat(bo);

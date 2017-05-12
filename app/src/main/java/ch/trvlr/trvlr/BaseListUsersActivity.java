@@ -21,7 +21,7 @@ public abstract class BaseListUsersActivity extends BaseDrawerActivity {
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
 //                mListView.getItemAtPosition(i);
                 int id = 1;
-                Intent intent = new Intent(getApplicationContext(), PublicChatActivity.class);
+                Intent intent = new Intent(getApplicationContext(), ChatActivity.class);
                 Bundle b = new Bundle();
                 b.putInt("chatId", id);
                 intent.putExtras(b);
