@@ -29,6 +29,9 @@ public class AppController extends Application {
     private LinkedList<ChatBO> privateChats;
     private int currentActivePrivateChatId;
 
+    // Myself.
+    private TravelerBO currentUser;
+
     @Override
     public void onCreate() {
         // Call super constructor.
@@ -71,6 +74,17 @@ public class AppController extends Application {
         if (mRequestQueue != null) {
             mRequestQueue.cancelAll(tag);
         }
+    }
+
+
+    // ----- Current user.
+
+    public TravelerBO getCurrentUser() {
+        return currentUser;
+    }
+
+    public void setCurrentUser(TravelerBO currentUser) {
+        this.currentUser = currentUser;
     }
 
 
@@ -170,7 +184,7 @@ public class AppController extends Application {
     }
 
 
-    // ----- Shortcuts for the methods above.
+    // ----- Shortcuts for public chats.
 
     public ChatBO getPublicChat(int chatId) {
         return getChat(CHATROOM_TYPE_PUBLIC, chatId);
@@ -190,5 +204,12 @@ public class AppController extends Application {
 
     public void setCurrentActivePublicChat(ChatBO bo) {
         setCurrentActiveChat(CHATROOM_TYPE_PUBLIC, bo);
+    }
+
+
+    // ----- Shortcuts for private chats.
+
+    public void setCurrentActivePrivateChat(ChatBO bo) {
+        setCurrentActiveChat(CHATROOM_TYPE_PRIVATE, bo);
     }
 }

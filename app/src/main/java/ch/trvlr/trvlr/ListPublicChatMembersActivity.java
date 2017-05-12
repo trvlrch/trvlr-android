@@ -1,5 +1,6 @@
 package ch.trvlr.trvlr;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.SparseArray;
 import android.view.View;
@@ -22,6 +23,10 @@ public class ListPublicChatMembersActivity extends BaseListUsersActivity {
         setTitle("Travelers");
         chatId = getIntent().getExtras().getInt("chatId");
         populateListView();
+
+        if (currentUser == null) {
+            currentUser = AppController.getInstance().getCurrentUser();
+        }
     }
 
     @Override
@@ -32,7 +37,15 @@ public class ListPublicChatMembersActivity extends BaseListUsersActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 TravelerBO traveler = (TravelerBO) parent.getItemAtPosition(position);
-                Toast.makeText(ListPublicChatMembersActivity.this, "onItemClick() with: [" + traveler.getFullname() + "]", Toast.LENGTH_LONG).show();
+                int uid1 = currentUser.getId();
+                int uid2 = traveler.getId();
+
+                AppController.getInstance().addToRequestQueue(new JsonArrayRequest(Method.GET,
+                        "http://trvlr.ch:8080/api/private-chats/" + uid1 + "/" + uid2,
+                        null,
+                        loadPrivateChatSuccess(),
+                        loadError()
+                ));
             }
         });
     }
@@ -55,11 +68,11 @@ public class ListPublicChatMembersActivity extends BaseListUsersActivity {
 
                     for (int i = 0; i < response.length(); i++) {
                         TravelerBO traveler = new TravelerBO(
-                            response.getJSONObject(i).getInt("id"),
-                            response.getJSONObject(i).getString("firstName"),
-                            response.getJSONObject(i).getString("lastName"),
-                            response.getJSONObject(i).getString("email"),
-                            response.getJSONObject(i).getString("uid")
+                                response.getJSONObject(i).getInt("id"),
+                                response.getJSONObject(i).getString("firstName"),
+                                response.getJSONObject(i).getString("lastName"),
+                                response.getJSONObject(i).getString("email"),
+                                response.getJSONObject(i).getString("uid")
                         );
 
                         if (traveler.getId() != currentUser.getId()) {
@@ -70,6 +83,37 @@ public class ListPublicChatMembersActivity extends BaseListUsersActivity {
 
                     TravelerAdapter adapter = new TravelerAdapter(sparseArray);
                     mListView.setAdapter(adapter);
+                } catch (JSONException e) {
+                    Toast.makeText(ListPublicChatMembersActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+        };
+    }
+
+    protected Response.Listener<JSONArray> loadPrivateChatSuccess() {
+        return new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray response) {
+                try {
+                    Intent intent = new Intent(getApplicationContext(), PublicChatActivity.class);
+                    // We always create a new BO.
+                    // TODO: Actually, we don't.
+                    int chatId = response.getJSONObject(0).getInt("id");
+                    JSONArray travelers = response.getJSONObject(0).getJSONArray("allTravelers");
+                    int uId1 = travelers.getJSONObject(0).getInt("id");
+                    int uId2 = travelers.getJSONObject(1).getInt("id");
+                    int indexToLoad = uId1 != currentUser.getId() ? 0 : 1;
+                    TravelerBO chatPartner = new TravelerBO(
+                        travelers.getJSONObject(indexToLoad).getInt("id"),
+                        travelers.getJSONObject(indexToLoad).getString("firstName"),
+                        travelers.getJSONObject(indexToLoad).getString("lastName"),
+                        travelers.getJSONObject(indexToLoad).getString("email"),
+                        travelers.getJSONObject(indexToLoad).getString("uid")
+                    );
+
+                    ChatBO bo = new ChatBO(chatId, chatPartner.getFullname(), chatPartner);
+                    ((AppController) getApplication()).setCurrentActivePrivateChat(bo);
+                    startActivity(intent);
                 } catch (JSONException e) {
                     Toast.makeText(ListPublicChatMembersActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
                 }

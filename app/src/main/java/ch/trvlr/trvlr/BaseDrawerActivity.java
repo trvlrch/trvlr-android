@@ -89,6 +89,9 @@ public class BaseDrawerActivity extends AppCompatActivity implements NavigationV
                         response.getString("email"),
                         response.getString("uid")
                     );
+
+                    // Make the current user for other activities available.
+                    AppController.getInstance().setCurrentUser(currentUser);
                 } catch (JSONException e) {
                     Toast.makeText(BaseDrawerActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
