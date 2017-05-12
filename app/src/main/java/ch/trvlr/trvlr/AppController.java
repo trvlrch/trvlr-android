@@ -253,4 +253,11 @@ public class AppController extends Application {
     public LinkedList<ChatBO> getPrivateChats() {
         return getChats(CHATROOM_TYPE_PRIVATE);
     }
+
+    public void addPrivateChat(ChatBO bo) {
+        if (getChat(CHATROOM_TYPE_PRIVATE, bo.getChatId()) == null) {
+            // Only add of it's not added yet.
+            addChat(CHATROOM_TYPE_PRIVATE, bo);
+        }
+    }
 }

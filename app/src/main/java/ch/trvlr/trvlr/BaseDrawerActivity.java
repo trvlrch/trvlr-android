@@ -17,9 +17,11 @@ import android.widget.Toast;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.google.firebase.auth.FirebaseAuth;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -92,8 +94,51 @@ public class BaseDrawerActivity extends AppCompatActivity implements NavigationV
 
                     // Make the current user for other activities available.
                     AppController.getInstance().setCurrentUser(currentUser);
+
+                    // Load the private chats of this user.
+                    AppController.getInstance().addToRequestQueue(new JsonArrayRequest(Request.Method.GET,
+                            "http://trvlr.ch:8080/api/private-chats/list/" + currentUser.getId(),
+                            null,
+                            loadTravelerPrivateChatsSuccess(),
+                            loadError()
+                    ));
                 } catch (JSONException e) {
                     Toast.makeText(BaseDrawerActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+        };
+    }
+
+    private Response.Listener<JSONArray> loadTravelerPrivateChatsSuccess() {
+        return new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray response) {
+                try {
+                    if (response.length() == 0) {
+                        Toast.makeText(BaseDrawerActivity.this, "Can not load private chats", Toast.LENGTH_LONG).show();
+                    } else {
+                        LinkedList<ChatBO> privateChats = new LinkedList<>();
+
+                        for (int i = 0; i < response.length(); i++) {
+                            JSONArray travelers = response.getJSONObject(i).getJSONArray("allTravelers");
+                            int uId1 = travelers.getJSONObject(0).getInt("id");
+                            int uId2 = travelers.getJSONObject(1).getInt("id");
+                            int indexToLoad = uId1 != currentUser.getId() ? 0 : 1;
+                            TravelerBO chatPartner = new TravelerBO(
+                                    travelers.getJSONObject(indexToLoad).getInt("id"),
+                                    travelers.getJSONObject(indexToLoad).getString("firstName"),
+                                    travelers.getJSONObject(indexToLoad).getString("lastName"),
+                                    travelers.getJSONObject(indexToLoad).getString("email"),
+                                    travelers.getJSONObject(indexToLoad).getString("uid")
+                            );
+                            ChatBO bo = new ChatBO(response.getJSONObject(i).getInt("id"), chatPartner.getFullname(), chatPartner);
+                            AppController.getInstance().addPrivateChat(bo);
+                        }
+
+                        rebuildMenu();
+                    }
+                } catch (JSONException e) {
+                    Toast.makeText(BaseDrawerActivity.this, "JSON Exception: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             }
         };
