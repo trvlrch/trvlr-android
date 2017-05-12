@@ -199,6 +199,20 @@ public class AppController extends Application {
         this.currentActiveChatType = currentActiveChatType;
     }
 
+    public ChatBO getChat(String chatName) {
+        ChatBO chat = null;
+
+        chat = getChat(CHATROOM_TYPE_PRIVATE, chatName);
+
+        if (chat != null) {
+            return chat;
+        }
+
+        chat = getChat(CHATROOM_TYPE_PUBLIC, chatName);
+
+        return chat;
+    }
+
     // ----- Shortcuts for public chats.
 
     public ChatBO getPublicChat(int chatId) {
