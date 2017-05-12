@@ -167,20 +167,25 @@ public class BaseDrawerActivity extends AppCompatActivity implements NavigationV
     }
 
     protected void rebuildMenu() {
-        // Clear menus.
+        // Clear menu.
         menu.clear();
 
-        // Add default menus.
+        // Add default menu items.
         menu.add(Menu.NONE, R.layout.activity_findconn, Menu.NONE, "Find connection");
 
-        // Add public chat menus.
+        // Add public chat menu items.
         LinkedList<ChatBO> publicChats = ((AppController) this.getApplication()).getPublicChats();
-
         for (ChatBO bo : publicChats) {
             menu.add(Menu.NONE, R.layout.activity_chat, Menu.NONE, bo.getChatName());
         }
 
-        // Add logout menu.
+        // Add private chat menu items.
+        LinkedList<ChatBO> privateChats = ((AppController) this.getApplication()).getPrivateChats();
+        for (ChatBO bo : privateChats) {
+            menu.add(Menu.NONE, R.layout.activity_chat, Menu.NONE, bo.getChatName());
+        }
+
+        // Add logout menu item.
         menu.add(Menu.NONE, R.layout.activity_login, Menu.NONE, "Logout");
     }
 

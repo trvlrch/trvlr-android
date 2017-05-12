@@ -235,4 +235,8 @@ public class AppController extends Application {
     public void setCurrentActiveChatTypeToPrivate() {
         setCurrentActiveChatType(CHATROOM_TYPE_PRIVATE);
     }
+
+    public LinkedList<ChatBO> getPrivateChats() {
+        return getChats(CHATROOM_TYPE_PRIVATE);
+    }
 }
