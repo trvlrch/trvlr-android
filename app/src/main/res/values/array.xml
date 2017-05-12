@@ -1,17 +1,1 @@
-<resources>
-    <string-array name="destinations">
-        <item>Zürich HB</item>
-        <item>Stadelhofen</item>
-        <item>Oerlikon</item>
-        <item>Altstetten</item>
-        <item>Wiedikon</item>
-        <item>Küsnacht</item>
-        <item>Winterthur</item>
-        <item>Flughafen Zürich</item>
-        <item>Hardbrücke</item>
-        <item>Bern HB</item>
-        <item>Basel HB</item>
-        <item>Chur</item>
-        <item>Genf</item>
-    </string-array>
-</resources>
+<resources></resources>
