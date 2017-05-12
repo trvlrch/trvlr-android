@@ -11,14 +11,21 @@ import java.util.LinkedList;
 
 public class AppController extends Application {
 
-    public static final String TAG = AppController.class .getSimpleName();
+    // ----- Static.
+
+    public static final String TAG = AppController.class.getSimpleName();
+    public static final int NO_CHATROOM_ACTIVE = -1;
 
     private RequestQueue mRequestQueue;
     private static AppController mInstance;
 
-    // Chat activities.
-    private LinkedList<PublicChatBO> publicChats;
+    // Public chat activities.
+    private LinkedList<ChatBO> publicChats;
     private int currentActivePublicChatId;
+
+    // Private chat activities.
+    private LinkedList<ChatBO> privateChats;
+    private int currentActivePrivateChatId;
 
     @Override
     public void onCreate() {
@@ -27,7 +34,9 @@ public class AppController extends Application {
 
         // Init variables.
         publicChats = new LinkedList<>();
-        currentActivePublicChatId = -1;
+        privateChats = new LinkedList<>();
+        currentActivePublicChatId = NO_CHATROOM_ACTIVE;
+        currentActivePrivateChatId = NO_CHATROOM_ACTIVE;
 
         // Save instance.
         mInstance = this;
@@ -73,11 +82,11 @@ public class AppController extends Application {
         this.currentActivePublicChatId = currentActivePublicChatId;
     }
 
-    public PublicChatBO getCurrentActivePublicChat() {
+    public ChatBO getCurrentActivePublicChat() {
         return getPublicChat(getCurrentActivePublicChatId());
     }
 
-    public void setCurrentActivePublicChat(PublicChatBO bo) {
+    public void setCurrentActivePublicChat(ChatBO bo) {
         int chatId = bo.getChatId();
 
         if (getPublicChat(chatId) == null) {
@@ -90,16 +99,16 @@ public class AppController extends Application {
         setCurrentActivePublicChatId(chatId);
     }
 
-    public void addPublicChat(PublicChatBO bo) {
+    public void addPublicChat(ChatBO bo) {
         publicChats.add(bo);
     }
 
-    public LinkedList<PublicChatBO> getPublicChats() {
+    public LinkedList<ChatBO> getPublicChats() {
         return publicChats;
     }
 
-    public PublicChatBO getPublicChat(int chatId) {
-        for (PublicChatBO i : publicChats) {
+    public ChatBO getPublicChat(int chatId) {
+        for (ChatBO i : publicChats) {
             if (i.getChatId() == chatId) {
                 return i;
             }
@@ -108,8 +117,8 @@ public class AppController extends Application {
         return null;
     }
 
-    public PublicChatBO getPublicChat(String chatName) {
-        for (PublicChatBO i : publicChats) {
+    public ChatBO getPublicChat(String chatName) {
+        for (ChatBO i : publicChats) {
             if (i.getChatName() == chatName) {
                 return i;
             }

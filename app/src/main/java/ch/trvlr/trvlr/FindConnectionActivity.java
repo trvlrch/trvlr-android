@@ -106,7 +106,7 @@ public class FindConnectionActivity extends BaseDrawerActivity {
                         Intent intent = new Intent(getApplicationContext(), PublicChatActivity.class);
                         // We always create a new BO.
                         // TODO check for duplicate connections before executing this code.
-                        PublicChatBO bo = new PublicChatBO(response.getJSONObject(0).getInt("id"), from + " - " + to);
+                        ChatBO bo = new ChatBO(response.getJSONObject(0).getInt("id"), from + " - " + to);
                         ((AppController) getApplication()).setCurrentActivePublicChat(bo);
                         startActivity(intent);
                     }

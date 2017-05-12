@@ -22,7 +22,7 @@ public abstract class ChatActivity extends BaseDrawerActivity {
     protected EditText chatText;
     protected String chatName;
     protected MessageAdapter adapter;
-    protected PublicChatBO bo;
+    protected ChatBO bo;
 
     // Dynamic data per chat room.
     protected StompClient mStompClient;

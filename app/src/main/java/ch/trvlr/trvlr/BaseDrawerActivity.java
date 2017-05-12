@@ -127,7 +127,7 @@ public class BaseDrawerActivity extends AppCompatActivity implements NavigationV
             case R.layout.activity_chat:
                 i = new Intent(getApplicationContext(), PublicChatActivity.class);
                 // Get the right bo of this chat room.
-                PublicChatBO bo = ((AppController) getApplication()).getPublicChat(item.getTitle().toString());
+                ChatBO bo = ((AppController) getApplication()).getPublicChat(item.getTitle().toString());
                 ((AppController) getApplication()).setCurrentActivePublicChat(bo);
                 startActivity(i);
                 break;
@@ -162,9 +162,9 @@ public class BaseDrawerActivity extends AppCompatActivity implements NavigationV
         menu.add(Menu.NONE, R.layout.activity_findconn, Menu.NONE, "Find connection");
 
         // Add public chat menus.
-        LinkedList<PublicChatBO> publicChats = ((AppController) this.getApplication()).getPublicChats();
+        LinkedList<ChatBO> publicChats = ((AppController) this.getApplication()).getPublicChats();
 
-        for (PublicChatBO bo : publicChats) {
+        for (ChatBO bo : publicChats) {
             menu.add(Menu.NONE, R.layout.activity_chat, Menu.NONE, bo.getChatName());
         }
 

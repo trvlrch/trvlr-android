@@ -6,7 +6,7 @@ import android.widget.ListView;
 
 import ua.naiksoftware.stomp.client.StompClient;
 
-public class PublicChatBO {
+public class ChatBO {
     // Chat fields.
     private int chatId;
     private String chatName;
@@ -18,8 +18,8 @@ public class PublicChatBO {
     // State fields.
     private boolean fullyInitialized;
 
-    public PublicChatBO(int chatId, String chatName,
-                        StompClient mStompClient, ListView messagesContainer) {
+    public ChatBO(int chatId, String chatName,
+                  StompClient mStompClient, ListView messagesContainer) {
         this.chatId = chatId;
         this.chatName = chatName;
         this.mStompClient = mStompClient;
@@ -27,7 +27,7 @@ public class PublicChatBO {
         this.fullyInitialized = true;
     }
 
-    public PublicChatBO(int chatId, String chatName) {
+    public ChatBO(int chatId, String chatName) {
         this.chatId = chatId;
         this.chatName = chatName;
         this.fullyInitialized = false;
