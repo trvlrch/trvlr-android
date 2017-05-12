@@ -14,7 +14,9 @@ public class AppController extends Application {
     // ----- Static.
 
     public static final String TAG = AppController.class.getSimpleName();
-    public static final int NO_CHATROOM_ACTIVE = -1;
+    public static final int CHATROOM_TYPE_PUBLIC = 1;
+    public static final int CHATROOM_TYPE_PRIVATE = 2;
+    public static final int CHATROOM_EMPTY = -1;
 
     private RequestQueue mRequestQueue;
     private static AppController mInstance;
@@ -35,8 +37,8 @@ public class AppController extends Application {
         // Init variables.
         publicChats = new LinkedList<>();
         privateChats = new LinkedList<>();
-        currentActivePublicChatId = NO_CHATROOM_ACTIVE;
-        currentActivePrivateChatId = NO_CHATROOM_ACTIVE;
+        currentActivePublicChatId = CHATROOM_EMPTY;
+        currentActivePrivateChatId = CHATROOM_EMPTY;
 
         // Save instance.
         mInstance = this;
@@ -71,59 +73,122 @@ public class AppController extends Application {
         }
     }
 
+
     // ----- Persistent chats.
 
+    public int getCurrentActiveChatId(int chatType) {
+        switch (chatType) {
+            case CHATROOM_TYPE_PUBLIC:
+                return currentActivePublicChatId;
 
-    public int getCurrentActivePublicChatId() {
-        return currentActivePublicChatId;
-    }
-
-    public void setCurrentActivePublicChatId(int currentActivePublicChatId) {
-        this.currentActivePublicChatId = currentActivePublicChatId;
-    }
-
-    public ChatBO getCurrentActivePublicChat() {
-        return getPublicChat(getCurrentActivePublicChatId());
-    }
-
-    public void setCurrentActivePublicChat(ChatBO bo) {
-        int chatId = bo.getChatId();
-
-        if (getPublicChat(chatId) == null) {
-            // New public chat, add it.
-            addPublicChat(bo);
-        } else {
-            // Existing public chat, nothing to add.
+            case CHATROOM_TYPE_PRIVATE:
+                return currentActivePrivateChatId;
         }
 
-        setCurrentActivePublicChatId(chatId);
+        return CHATROOM_EMPTY;
     }
 
-    public void addPublicChat(ChatBO bo) {
-        publicChats.add(bo);
+    public void setCurrentActiveChatId(int chatType, int currentActiveChatId) {
+        switch (chatType) {
+            case CHATROOM_TYPE_PUBLIC:
+                this.currentActivePublicChatId = currentActiveChatId;
+                break;
+
+            case CHATROOM_TYPE_PRIVATE:
+                this.currentActivePrivateChatId = currentActiveChatId;
+                break;
+        }
     }
 
-    public LinkedList<ChatBO> getPublicChats() {
-        return publicChats;
+    public LinkedList<ChatBO> getChats(int chatType) {
+        switch (chatType) {
+            case CHATROOM_TYPE_PUBLIC:
+                return this.publicChats;
+
+            case CHATROOM_TYPE_PRIVATE:
+                return this.privateChats;
+        }
+
+        return null;
     }
 
-    public ChatBO getPublicChat(int chatId) {
-        for (ChatBO i : publicChats) {
-            if (i.getChatId() == chatId) {
-                return i;
+    public void addChat(int chatType, ChatBO bo) {
+        switch (chatType) {
+            case CHATROOM_TYPE_PUBLIC:
+                this.publicChats.add(bo);
+                break;
+
+            case CHATROOM_TYPE_PRIVATE:
+                this.privateChats.add(bo);
+                break;
+        }
+    }
+
+    public ChatBO getChat(int chatType, int chatId) {
+        LinkedList<ChatBO> chats = this.getChats(chatType);
+
+        if (chats != null) {
+            for (ChatBO i : chats) {
+                if (i.getChatId() == chatId) {
+                    return i;
+                }
             }
         }
 
         return null;
+    }
+
+    public ChatBO getChat(int chatType, String chatName) {
+        LinkedList<ChatBO> chats = this.getChats(chatType);
+
+        if (chats != null) {
+            for (ChatBO i : chats) {
+                if (i.getChatName() == chatName) {
+                    return i;
+                }
+            }
+        }
+
+        return null;
+    }
+
+    public ChatBO getCurrentActiveChat(int chatType) {
+        return getChat(chatType, getCurrentActiveChatId(chatType));
+    }
+
+    public void setCurrentActiveChat(int chatType, ChatBO bo) {
+        int chatId = bo.getChatId();
+
+        if (getChat(chatType, chatId) == null) {
+            // New chat, add it.
+            addChat(chatType, bo);
+        } else {
+            // Existing chat, nothing to add.
+        }
+
+        this.setCurrentActiveChatId(chatType, chatId);
+    }
+
+
+    // ----- Shortcuts for the methods above.
+
+    public ChatBO getPublicChat(int chatId) {
+        return getChat(CHATROOM_TYPE_PUBLIC, chatId);
     }
 
     public ChatBO getPublicChat(String chatName) {
-        for (ChatBO i : publicChats) {
-            if (i.getChatName() == chatName) {
-                return i;
-            }
-        }
+        return getChat(CHATROOM_TYPE_PUBLIC, chatName);
+    }
 
-        return null;
+    public LinkedList<ChatBO> getPublicChats() {
+        return getChats(CHATROOM_TYPE_PUBLIC);
+    }
+
+    public ChatBO getCurrentActivePublicChat() {
+        return getCurrentActiveChat(CHATROOM_TYPE_PUBLIC);
+    }
+
+    public void setCurrentActivePublicChat(ChatBO bo) {
+        setCurrentActiveChat(CHATROOM_TYPE_PUBLIC, bo);
     }
 }
