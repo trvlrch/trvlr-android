@@ -46,7 +46,7 @@ public class PublicChatActivity extends ChatActivity {
         setTitle(chatName);
 
         if (!bo.isFullyInitialized()) {
-            // This public chat was not initialized fully yet, let's finalze it it.
+            // This chat was not initialized fully yet, let's finalze it.
             mStompClient = Stomp.over(WebSocket.class, "ws://trvlr.ch:8080/socket/websocket");
             mStompClient.lifecycle().subscribe(new Action1<LifecycleEvent>() {
                 @Override
