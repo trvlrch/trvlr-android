@@ -38,7 +38,7 @@ public class PublicChatActivity extends ChatActivity {
         messagesContainer = (ListView) findViewById(R.id.messagesContainer);
 
         // We always display the chat which is current in the application scope.
-        bo = ((AppController) getApplication()).getCurrentActivePublicChat();
+        bo = ((AppController) getApplication()).getCurrentActiveChat();
         chatId = bo.getChatId();
         chatName = bo.getChatName();
 

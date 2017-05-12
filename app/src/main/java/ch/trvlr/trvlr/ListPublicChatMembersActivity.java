@@ -115,6 +115,7 @@ public class ListPublicChatMembersActivity extends BaseListUsersActivity {
 
                     ChatBO bo = new ChatBO(chatId, chatPartner.getFullname(), chatPartner);
                     ((AppController) getApplication()).setCurrentActivePrivateChat(bo);
+                    ((AppController) getApplication()).setCurrentActiveChatTypeToPrivate();
                     startActivity(intent);
                 } catch (JSONException e) {
                     Toast.makeText(ListPublicChatMembersActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();

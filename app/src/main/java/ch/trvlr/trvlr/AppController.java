@@ -29,6 +29,9 @@ public class AppController extends Application {
     private LinkedList<ChatBO> privateChats;
     private int currentActivePrivateChatId;
 
+    // Current chat type.
+    private int currentActiveChatType;
+
     // Myself.
     private TravelerBO currentUser;
 
@@ -42,6 +45,7 @@ public class AppController extends Application {
         privateChats = new LinkedList<>();
         currentActivePublicChatId = CHATROOM_EMPTY;
         currentActivePrivateChatId = CHATROOM_EMPTY;
+        currentActiveChatType = CHATROOM_TYPE_PUBLIC;
 
         // Save instance.
         mInstance = this;
@@ -170,6 +174,10 @@ public class AppController extends Application {
         return getChat(chatType, getCurrentActiveChatId(chatType));
     }
 
+    public ChatBO getCurrentActiveChat() {
+        return getChat(getCurrentActiveChatType(), getCurrentActiveChatId(getCurrentActiveChatType()));
+    }
+
     public void setCurrentActiveChat(int chatType, ChatBO bo) {
         int chatId = bo.getChatId();
 
@@ -183,6 +191,13 @@ public class AppController extends Application {
         this.setCurrentActiveChatId(chatType, chatId);
     }
 
+    public int getCurrentActiveChatType() {
+        return currentActiveChatType;
+    }
+
+    public void setCurrentActiveChatType(int currentActiveChatType) {
+        this.currentActiveChatType = currentActiveChatType;
+    }
 
     // ----- Shortcuts for public chats.
 
@@ -206,10 +221,18 @@ public class AppController extends Application {
         setCurrentActiveChat(CHATROOM_TYPE_PUBLIC, bo);
     }
 
+    public void setCurrentActiveChatTypeToPublic() {
+        setCurrentActiveChatType(CHATROOM_TYPE_PUBLIC);
+    }
+
 
     // ----- Shortcuts for private chats.
 
     public void setCurrentActivePrivateChat(ChatBO bo) {
         setCurrentActiveChat(CHATROOM_TYPE_PRIVATE, bo);
+    }
+
+    public void setCurrentActiveChatTypeToPrivate() {
+        setCurrentActiveChatType(CHATROOM_TYPE_PRIVATE);
     }
 }

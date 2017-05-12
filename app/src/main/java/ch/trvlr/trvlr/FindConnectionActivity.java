@@ -108,6 +108,7 @@ public class FindConnectionActivity extends BaseDrawerActivity {
                         // TODO check for duplicate connections before executing this code.
                         ChatBO bo = new ChatBO(response.getJSONObject(0).getInt("id"), from + " - " + to, ChatBO.CHATROOM_TYPE_PUBLIC);
                         ((AppController) getApplication()).setCurrentActivePublicChat(bo);
+                        ((AppController) getApplication()).setCurrentActiveChatTypeToPublic();
                         startActivity(intent);
                     }
                 } catch (JSONException e) {
