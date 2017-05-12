@@ -62,7 +62,10 @@ public class ListPublicChatMembersActivity extends BaseListUsersActivity {
                             response.getJSONObject(i).getString("uid")
                         );
 
-                        sparseArray.put(traveler.getId(), traveler);
+                        if (traveler.getId() != currentUser.getId()) {
+                            // Only add traveler if it's not me.
+                            sparseArray.put(traveler.getId(), traveler);
+                        }
                     }
 
                     TravelerAdapter adapter = new TravelerAdapter(sparseArray);
