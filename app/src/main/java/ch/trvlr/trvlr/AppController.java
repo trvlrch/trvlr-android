@@ -7,7 +7,10 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 
+import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
+import java.util.function.Predicate;
 
 public class AppController extends Application {
 
@@ -216,6 +219,17 @@ public class AppController extends Application {
         chat = getChat(CHATROOM_TYPE_PUBLIC, chatName);
 
         return chat;
+    }
+
+    public void removeChat(int chatId, int chatType) {
+        List<ChatBO> chats = (chatType == AppController.CHATROOM_TYPE_PUBLIC) ? publicChats : privateChats;
+
+        for (Iterator<ChatBO> iter = chats.listIterator(); iter.hasNext(); ) {
+            ChatBO chat = iter.next();
+            if (chatId == chat.getChatId()) {
+                iter.remove();
+            }
+        }
     }
 
     // ----- Shortcuts for public chats.

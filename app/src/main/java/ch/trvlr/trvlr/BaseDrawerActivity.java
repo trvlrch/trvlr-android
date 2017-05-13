@@ -66,6 +66,12 @@ public class BaseDrawerActivity extends AppCompatActivity implements NavigationV
         loadTravelerId();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        rebuildMenu();
+    }
+
     private void loadTravelerId() {
         if (travelerId > 0) return;
 
@@ -124,7 +130,8 @@ public class BaseDrawerActivity extends AppCompatActivity implements NavigationV
             public void onResponse(JSONArray response) {
                 try {
                     if (response.length() == 0) {
-                        Toast.makeText(BaseDrawerActivity.this, "Can not chats (Type: " + chatType + ")", Toast.LENGTH_LONG).show();
+                        // TODO: check if empty json array is also response.length() == 0
+//                        Toast.makeText(BaseDrawerActivity.this, "Can not chats (Type: " + chatType + ")", Toast.LENGTH_LONG).show();
                     } else {
                         for (int i = 0; i < response.length(); i++) {
                             ChatBO bo = null;
@@ -227,6 +234,13 @@ public class BaseDrawerActivity extends AppCompatActivity implements NavigationV
                 Toast.makeText(BaseDrawerActivity.this, error.getMessage(), Toast.LENGTH_SHORT).show();
             }
         };
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(final Menu menu) {
+        rebuildMenu();
+
+        return super.onCreateOptionsMenu(menu);
     }
 
     protected void rebuildMenu() {
