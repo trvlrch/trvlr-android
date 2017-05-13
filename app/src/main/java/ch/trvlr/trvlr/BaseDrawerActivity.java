@@ -191,13 +191,6 @@ public class BaseDrawerActivity extends AppCompatActivity implements NavigationV
             case R.layout.activity_findconn:
                 startActivity(new Intent(getApplicationContext(), FindConnectionActivity.class));
                 break;
-            case R.layout.activity_base_list_users:
-                i = new Intent(getApplicationContext(), ListPrivateChatsActivity.class);
-                b = new Bundle();
-                b.putInt("travelerId", travelerId);
-                i.putExtras(b);
-                startActivity(i);
-                break;
             case R.layout.activity_chat:
                 i = new Intent(getApplicationContext(), ChatActivity.class);
                 // Get the right bo of this chat room.

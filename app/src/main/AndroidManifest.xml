@@ -25,7 +25,6 @@
             android:theme="@style/AppTheme"
             android:exported="true" />
         <activity android:name=".FindConnectionActivity"></activity>
-        <activity android:name=".ListPrivateChatsActivity"></activity>
         <activity android:name=".ListPublicChatMembersActivity"></activity>
     </application>
 </manifest>

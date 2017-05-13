@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.util.SparseArray;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.android.volley.Response;
@@ -17,12 +18,16 @@ import org.json.JSONObject;
 
 import static com.android.volley.Request.Method;
 
-public class ListPublicChatMembersActivity extends BaseListUsersActivity {
+public class ListPublicChatMembersActivity extends BaseDrawerActivity {
+
+    ListView mListView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getLayoutInflater().inflate(R.layout.activity_base_list_users, mFrameLayout);
         setTitle("Travelers");
+        mListView = (ListView)findViewById(R.id.listView);
         chatId = getIntent().getExtras().getInt("chatId");
         populateListView();
 
