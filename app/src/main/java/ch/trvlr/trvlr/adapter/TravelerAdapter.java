@@ -1,4 +1,4 @@
-package ch.trvlr.trvlr;
+package ch.trvlr.trvlr.adapter;
 
 import android.util.SparseArray;
 import android.view.LayoutInflater;
@@ -8,6 +8,8 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import java.util.LinkedList;
+
+import ch.trvlr.trvlr.bo.TravelerBO;
 
 public class TravelerAdapter extends BaseAdapter {
 

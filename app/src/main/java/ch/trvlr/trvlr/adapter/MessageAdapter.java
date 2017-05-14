@@ -1,8 +1,7 @@
-package ch.trvlr.trvlr;
+package ch.trvlr.trvlr.adapter;
 
 import android.graphics.Color;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -15,6 +14,9 @@ import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
+
+import ch.trvlr.trvlr.model.Message;
+import ch.trvlr.trvlr.R;
 
 public class MessageAdapter extends BaseAdapter {
     private List<Message> messages;

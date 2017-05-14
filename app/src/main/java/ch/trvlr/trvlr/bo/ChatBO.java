@@ -1,9 +1,9 @@
-package ch.trvlr.trvlr;
+package ch.trvlr.trvlr.bo;
 
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ListView;
 
+import ch.trvlr.trvlr.AppController;
+import ch.trvlr.trvlr.bo.TravelerBO;
 import ua.naiksoftware.stomp.client.StompClient;
 
 public class ChatBO {

@@ -1,4 +1,4 @@
-package ch.trvlr.trvlr;
+package ch.trvlr.trvlr.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,6 +15,12 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import ch.trvlr.trvlr.AppController;
+import ch.trvlr.trvlr.R;
+import ch.trvlr.trvlr.adapter.TravelerAdapter;
+import ch.trvlr.trvlr.bo.ChatBO;
+import ch.trvlr.trvlr.bo.TravelerBO;
 
 import static com.android.volley.Request.Method;
 

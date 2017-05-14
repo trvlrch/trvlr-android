@@ -1,4 +1,4 @@
-package ch.trvlr.trvlr;
+package ch.trvlr.trvlr.ui;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -24,6 +24,8 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+
+import ch.trvlr.trvlr.R;
 
 public class LoginActivity extends AppCompatActivity
         implements OnConnectionFailedListener, View.OnClickListener {

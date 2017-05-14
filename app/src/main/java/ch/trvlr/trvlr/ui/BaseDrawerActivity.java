@@ -1,4 +1,4 @@
-package ch.trvlr.trvlr;
+package ch.trvlr.trvlr.ui;
 
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -27,6 +27,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.LinkedList;
+
+import ch.trvlr.trvlr.AppController;
+import ch.trvlr.trvlr.R;
+import ch.trvlr.trvlr.bo.ChatBO;
+import ch.trvlr.trvlr.bo.TravelerBO;
 
 public class BaseDrawerActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 

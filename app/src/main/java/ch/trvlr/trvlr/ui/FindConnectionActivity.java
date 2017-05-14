@@ -1,4 +1,4 @@
-package ch.trvlr.trvlr;
+package ch.trvlr.trvlr.ui;
 
 import android.content.Context;
 import android.content.Intent;
@@ -21,6 +21,10 @@ import org.json.JSONObject;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+
+import ch.trvlr.trvlr.AppController;
+import ch.trvlr.trvlr.R;
+import ch.trvlr.trvlr.bo.ChatBO;
 
 import static com.android.volley.Request.Method;
 

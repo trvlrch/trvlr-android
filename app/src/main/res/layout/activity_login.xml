@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="ch.trvlr.trvlr.LoginActivity">
+    tools:context="ch.trvlr.trvlr.ui.LoginActivity">
 
     <LinearLayout
         android:layout_width="fill_parent"

@@ -5,6 +5,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 
+import ch.trvlr.trvlr.ui.ChatActivity;
+
 public class Firebase extends AppCompatActivity {
 
     @Override

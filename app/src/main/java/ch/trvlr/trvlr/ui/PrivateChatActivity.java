@@ -1,4 +1,4 @@
-package ch.trvlr.trvlr;
+package ch.trvlr.trvlr.ui;
 
 import android.support.annotation.NonNull;
 import android.util.Log;
@@ -19,6 +19,10 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import ch.trvlr.trvlr.AppController;
+import ch.trvlr.trvlr.model.Message;
+import ch.trvlr.trvlr.adapter.MessageAdapter;
+import ch.trvlr.trvlr.R;
 import rx.functions.Action1;
 import ua.naiksoftware.stomp.LifecycleEvent;
 import ua.naiksoftware.stomp.Stomp;

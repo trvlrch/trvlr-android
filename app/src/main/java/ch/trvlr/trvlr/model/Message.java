@@ -1,4 +1,4 @@
-package ch.trvlr.trvlr;
+package ch.trvlr.trvlr.model;
 
 
 import com.google.gson.annotations.SerializedName;

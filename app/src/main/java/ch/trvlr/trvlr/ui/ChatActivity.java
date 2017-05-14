@@ -1,4 +1,4 @@
-package ch.trvlr.trvlr;
+package ch.trvlr.trvlr.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,17 +11,12 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
-import com.android.volley.Request;
 import com.android.volley.Request.Method;
 import com.android.volley.Response;
-import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.HttpHeaderParser;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.JsonRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -30,17 +25,19 @@ import com.google.firebase.auth.GetTokenResult;
 import com.google.gson.Gson;
 
 import org.java_websocket.WebSocket;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
+import ch.trvlr.trvlr.AppController;
+import ch.trvlr.trvlr.model.Message;
+import ch.trvlr.trvlr.adapter.MessageAdapter;
+import ch.trvlr.trvlr.R;
+import ch.trvlr.trvlr.bo.ChatBO;
 import rx.functions.Action1;
 import ua.naiksoftware.stomp.LifecycleEvent;
 import ua.naiksoftware.stomp.Stomp;

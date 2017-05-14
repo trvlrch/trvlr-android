@@ -10,7 +10,7 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".LoginActivity"
+        <activity android:name=".ui.LoginActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -19,12 +19,12 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ChatActivity"
+            android:name=".ui.ChatActivity"
             android:label="@string/title_activity_public_chat"
             android:windowSoftInputMode="adjustResize"
             android:theme="@style/AppTheme"
             android:exported="true" />
-        <activity android:name=".FindConnectionActivity"></activity>
-        <activity android:name=".ListPublicChatMembersActivity"></activity>
+        <activity android:name=".ui.FindConnectionActivity"></activity>
+        <activity android:name=".ui.ListPublicChatMembersActivity"></activity>
     </application>
 </manifest>

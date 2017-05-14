@@ -10,7 +10,9 @@ import com.android.volley.toolbox.Volley;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.function.Predicate;
+
+import ch.trvlr.trvlr.bo.ChatBO;
+import ch.trvlr.trvlr.bo.TravelerBO;
 
 public class AppController extends Application {
 
