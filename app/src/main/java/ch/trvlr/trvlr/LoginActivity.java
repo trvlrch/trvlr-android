@@ -85,7 +85,7 @@ public class LoginActivity extends AppCompatActivity
                 GoogleSignInAccount account = result.getSignInAccount();
                 firebaseAuthWithGoogle(account);
             } else {
-                Toast.makeText(getApplicationContext(), "Login failed. Please try again.",
+                Toast.makeText(getApplicationContext(), TAG + ": " + "Login failed. Please try again.",
                         Toast.LENGTH_SHORT).show();
             }
         }
@@ -107,7 +107,7 @@ public class LoginActivity extends AppCompatActivity
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
-                            Toast.makeText(LoginActivity.this, "Authentication failed.",
+                            Toast.makeText(LoginActivity.this, TAG + ": " + "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
                         }
 
@@ -119,7 +119,7 @@ public class LoginActivity extends AppCompatActivity
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
         Log.d(TAG, "onConnectionFailed:" + connectionResult);
-        Toast.makeText(getApplicationContext(), "Connection failed. Please try again later.",
+        Toast.makeText(getApplicationContext(), TAG + ": " + "Connection failed. Please try again later.",
                        Toast.LENGTH_SHORT).show();
     }
 

@@ -91,7 +91,7 @@ public class ListPublicChatMembersActivity extends BaseDrawerActivity {
                     TravelerAdapter adapter = new TravelerAdapter(sparseArray);
                     mListView.setAdapter(adapter);
                 } catch (JSONException e) {
-                    Toast.makeText(ListPublicChatMembersActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ListPublicChatMembersActivity.this, TAG + ": " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             }
         };
@@ -123,7 +123,7 @@ public class ListPublicChatMembersActivity extends BaseDrawerActivity {
                     ((AppController) getApplication()).setCurrentActiveChatTypeToPrivate();
                     startActivity(intent);
                 } catch (JSONException e) {
-                    Toast.makeText(ListPublicChatMembersActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ListPublicChatMembersActivity.this, TAG + ": " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             }
         };

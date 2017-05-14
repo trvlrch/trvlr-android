@@ -56,7 +56,7 @@ public class FindConnectionActivity extends BaseDrawerActivity {
                 String encodedTo = to;
 
                 if(from.equals(to)){
-                    Toast.makeText(FindConnectionActivity.this, "invalid connection", Toast.LENGTH_LONG).show();
+                    Toast.makeText(FindConnectionActivity.this, TAG + ": " + "invalid connection", Toast.LENGTH_LONG).show();
                 }
 
                 try {
@@ -101,7 +101,7 @@ public class FindConnectionActivity extends BaseDrawerActivity {
                 // Start the public chat.
                 try {
                     if (response.length() == 0) {
-                        Toast.makeText(FindConnectionActivity.this, "invalid connection", Toast.LENGTH_LONG).show();
+                        Toast.makeText(FindConnectionActivity.this, TAG + ": " + "invalid connection", Toast.LENGTH_LONG).show();
                     } else {
                         Intent intent = new Intent(getApplicationContext(), ChatActivity.class);
                         // We always create a new BO.
@@ -112,7 +112,7 @@ public class FindConnectionActivity extends BaseDrawerActivity {
                         startActivity(intent);
                     }
                 } catch (JSONException e) {
-                    Toast.makeText(FindConnectionActivity.this, "JSON Exception: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(FindConnectionActivity.this, TAG + ": " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             }
         };
@@ -133,7 +133,7 @@ public class FindConnectionActivity extends BaseDrawerActivity {
             public void onResponse(JSONArray response) {
                 try {
                     if (response.length() == 0) {
-                        Toast.makeText(FindConnectionActivity.this, "No available connections", Toast.LENGTH_LONG).show();
+                        Toast.makeText(FindConnectionActivity.this, TAG + ": " + "No available connections", Toast.LENGTH_LONG).show();
                     } else {
                         ArrayList<String> stations = new ArrayList<>();
 
@@ -156,7 +156,7 @@ public class FindConnectionActivity extends BaseDrawerActivity {
                         toTextView.setAdapter(toAdapter);
                     }
                 } catch (JSONException e) {
-                    Toast.makeText(FindConnectionActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(FindConnectionActivity.this, TAG + ": " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             }
         };

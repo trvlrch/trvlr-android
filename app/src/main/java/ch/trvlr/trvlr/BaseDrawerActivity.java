@@ -30,6 +30,14 @@ import java.util.LinkedList;
 
 public class BaseDrawerActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
+
+    // ----- Static.
+
+    public static final String TAG = BaseDrawerActivity.class.getSimpleName();
+
+
+    // ----- State.
+
     protected DrawerLayout mDrawerLayout;
     protected FrameLayout mFrameLayout;
     protected NavigationView mNavigationView;
@@ -118,7 +126,7 @@ public class BaseDrawerActivity extends AppCompatActivity implements NavigationV
                             loadError()
                     ));
                 } catch (JSONException e) {
-                    Toast.makeText(BaseDrawerActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(BaseDrawerActivity.this, TAG + ": " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             }
         };
@@ -162,7 +170,7 @@ public class BaseDrawerActivity extends AppCompatActivity implements NavigationV
                         rebuildMenu();
                     }
                 } catch (JSONException e) {
-                    Toast.makeText(BaseDrawerActivity.this, "JSON Exception: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(BaseDrawerActivity.this, TAG + ": " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             }
         };
@@ -214,7 +222,7 @@ public class BaseDrawerActivity extends AppCompatActivity implements NavigationV
                 startActivity(i);
                 break;
             default:
-                Toast.makeText(BaseDrawerActivity.this, "Activity unavailable", Toast.LENGTH_SHORT).show();
+                Toast.makeText(BaseDrawerActivity.this, TAG + ": " + "Activity unavailable", Toast.LENGTH_SHORT).show();
         }
 
         mDrawerLayout.closeDrawer(GravityCompat.START);
@@ -231,7 +239,7 @@ public class BaseDrawerActivity extends AppCompatActivity implements NavigationV
         return new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(BaseDrawerActivity.this, error.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(BaseDrawerActivity.this, TAG + ": " + error.getMessage(), Toast.LENGTH_SHORT).show();
             }
         };
     }
