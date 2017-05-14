@@ -146,17 +146,20 @@ public class BaseDrawerActivity extends AppCompatActivity implements NavigationV
 
                             if (chatType == AppController.CHATROOM_TYPE_PRIVATE) {
                                 JSONArray travelers = response.getJSONObject(i).getJSONArray("allTravelers");
-                                int uId1 = travelers.getJSONObject(0).getInt("id");
-                                int uId2 = travelers.getJSONObject(1).getInt("id");
-                                int indexToLoad = uId1 != currentUser.getId() ? 0 : 1;
-                                TravelerBO chatPartner = new TravelerBO(
-                                        travelers.getJSONObject(indexToLoad).getInt("id"),
-                                        travelers.getJSONObject(indexToLoad).getString("firstName"),
-                                        travelers.getJSONObject(indexToLoad).getString("lastName"),
-                                        travelers.getJSONObject(indexToLoad).getString("email"),
-                                        travelers.getJSONObject(indexToLoad).getString("uid")
-                                );
-                                bo = new ChatBO(response.getJSONObject(i).getInt("id"), chatPartner.getFullname(), chatPartner);
+
+                                if (travelers.length() > 1) {
+                                    int uId1 = travelers.getJSONObject(0).getInt("id");
+                                    int uId2 = travelers.getJSONObject(1).getInt("id");
+                                    int indexToLoad = uId1 != currentUser.getId() ? 0 : 1;
+                                    TravelerBO chatPartner = new TravelerBO(
+                                            travelers.getJSONObject(indexToLoad).getInt("id"),
+                                            travelers.getJSONObject(indexToLoad).getString("firstName"),
+                                            travelers.getJSONObject(indexToLoad).getString("lastName"),
+                                            travelers.getJSONObject(indexToLoad).getString("email"),
+                                            travelers.getJSONObject(indexToLoad).getString("uid")
+                                    );
+                                    bo = new ChatBO(response.getJSONObject(i).getInt("id"), chatPartner.getFullname(), chatPartner);
+                                }
                             } else {
                                 String from = response.getJSONObject(i).getJSONObject("from").getString("name");
                                 String to = response.getJSONObject(i).getJSONObject("to").getString("name");
@@ -164,7 +167,9 @@ public class BaseDrawerActivity extends AppCompatActivity implements NavigationV
                                 bo = new ChatBO(response.getJSONObject(i).getInt("id"), from + " - " + to, ChatBO.CHATROOM_TYPE_PUBLIC);
                             }
 
-                            AppController.getInstance().addChat(chatType, bo);
+                            if (bo != null) {
+                                AppController.getInstance().addChat(chatType, bo);
+                            }
                         }
 
                         rebuildMenu();
