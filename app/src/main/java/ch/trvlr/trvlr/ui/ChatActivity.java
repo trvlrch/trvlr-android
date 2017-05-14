@@ -2,6 +2,7 @@ package ch.trvlr.trvlr.ui;
 
 import android.support.annotation.NonNull;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -161,6 +162,22 @@ public class ChatActivity extends BaseDrawerActivity {
             messagesContainer.setAdapter(adapter);
             bo.setMessagesContainer(messagesContainer);
         }
+
+        chatText.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                // If the event is a key-down event on the "enter" button.
+                if ((event.getAction() == KeyEvent.ACTION_DOWN) &&
+                        (keyCode == KeyEvent.KEYCODE_ENTER)) {
+                    // Send message.
+                    sendButton.performClick();
+
+                    return true;
+                }
+
+                return false;
+            }
+        });
     }
 
     protected Message convertJsonToMessage(String payload) {
