@@ -203,6 +203,7 @@ public class AppController extends Application {
         }
 
         this.setCurrentActiveChatId(chatType, chatId);
+        this.setCurrentActiveChatType(chatType);
     }
 
     public int getCurrentActiveChatType() {

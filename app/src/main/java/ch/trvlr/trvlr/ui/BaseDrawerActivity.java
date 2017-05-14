@@ -196,7 +196,20 @@ public class BaseDrawerActivity extends AppCompatActivity implements NavigationV
         if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
             mDrawerLayout.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+            AppController controller = AppController.getInstance();
+            ChatBO activeChat = controller.getCurrentActiveChat();
+            ChatBO activePublicChat = controller.getCurrentActivePublicChat();
+
+            if (activeChat.isPrivateChat() && activePublicChat != null) {
+                // When coming from a private chat or the list users activity, go to the
+                // current active public chat room.
+
+                controller.setCurrentActiveChat(AppController.CHATROOM_TYPE_PUBLIC, activePublicChat);
+                startActivity(new Intent(getApplicationContext(), ChatActivity.class));
+            } else {
+                // Go to the find connection activity otherwise.
+                startActivity(new Intent(getApplicationContext(), FindConnectionActivity.class));
+            }
         }
     }
 
