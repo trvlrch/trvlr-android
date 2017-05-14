@@ -209,7 +209,7 @@ public class ChatActivity extends BaseDrawerActivity {
 
     @Override
     public boolean onCreateOptionsMenu(final Menu menu) {
-        getMenuInflater().inflate(R.menu.chat, menu);
+        getMenuInflater().inflate(R.menu.settings, menu);
 
         return super.onCreateOptionsMenu(menu);
     }
