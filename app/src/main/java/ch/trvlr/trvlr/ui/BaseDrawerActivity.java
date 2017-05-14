@@ -1,5 +1,6 @@
 package ch.trvlr.trvlr.ui;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -56,11 +57,14 @@ public class BaseDrawerActivity extends AppCompatActivity implements NavigationV
     protected int travelerId = -1;
     protected int chatId = -1;
     protected TravelerBO currentUser = null;
+    protected AppController appController = null;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         super.setContentView(R.layout.activity_base_drawer);
+
+        appController = (AppController) this.getApplicationContext();
 
         mFrameLayout = (FrameLayout) findViewById(R.id.content_frame);
 
@@ -87,7 +91,20 @@ public class BaseDrawerActivity extends AppCompatActivity implements NavigationV
     @Override
     protected void onResume() {
         super.onResume();
+        appController.setCurrentActivity(this);
         rebuildMenu();
+    }
+
+    @Override
+    protected void onPause() {
+        clearReferences();
+        super.onPause();
+    }
+
+    @Override
+    protected void onDestroy() {
+        clearReferences();
+        super.onDestroy();
     }
 
     private void loadTravelerId() {
@@ -196,19 +213,48 @@ public class BaseDrawerActivity extends AppCompatActivity implements NavigationV
         if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
             mDrawerLayout.closeDrawer(GravityCompat.START);
         } else {
-            AppController controller = AppController.getInstance();
-            ChatBO activeChat = controller.getCurrentActiveChat();
-            ChatBO activePublicChat = controller.getCurrentActivePublicChat();
+            ChatBO activeChat = appController.getCurrentActiveChat();
+            ChatBO activePublicChat = appController.getCurrentActivePublicChat();
+            Activity currentActivity = appController.getCurrentActivity();
+            String currentActivityClass = "";
 
-            if (activeChat.isPrivateChat() && activePublicChat != null) {
-                // When coming from a private chat or the list users activity, go to the
-                // current active public chat room.
+            if (currentActivity != null) {
+                currentActivityClass = appController.getCurrentActivity().getLocalClassName();
+            }
 
-                controller.setCurrentActiveChat(AppController.CHATROOM_TYPE_PUBLIC, activePublicChat);
-                startActivity(new Intent(getApplicationContext(), ChatActivity.class));
-            } else {
-                // Go to the find connection activity otherwise.
-                startActivity(new Intent(getApplicationContext(), FindConnectionActivity.class));
+            Toast.makeText(BaseDrawerActivity.this, currentActivityClass, Toast.LENGTH_LONG).show();
+
+            switch (currentActivityClass) {
+                case "ui.ChatActivity":
+                    if (activeChat.getChatType() == AppController.CHATROOM_TYPE_PRIVATE && activePublicChat != null) {
+                        appController.setCurrentActiveChat(AppController.CHATROOM_TYPE_PRIVATE, null);
+                        appController.setCurrentActiveChat(AppController.CHATROOM_TYPE_PUBLIC, activePublicChat);
+                        startActivity(new Intent(getApplicationContext(), ChatActivity.class));
+                    } else {
+                        appController.setCurrentActiveChat(AppController.CHATROOM_TYPE_PUBLIC, null);
+                        appController.setCurrentActiveChat(AppController.CHATROOM_TYPE_PRIVATE, null);
+                        startActivity(new Intent(getApplicationContext(), FindConnectionActivity.class));
+                    }
+
+                    break;
+
+                case "ui.ListPublicChatMembersActivity":
+                    if (activePublicChat != null) {
+                        appController.setCurrentActiveChat(AppController.CHATROOM_TYPE_PUBLIC, activePublicChat);
+                        startActivity(new Intent(getApplicationContext(), ChatActivity.class));
+                    } else {
+                        appController.setCurrentActiveChat(AppController.CHATROOM_TYPE_PUBLIC, null);
+                        appController.setCurrentActiveChat(AppController.CHATROOM_TYPE_PRIVATE, null);
+                        startActivity(new Intent(getApplicationContext(), FindConnectionActivity.class));
+                    }
+
+                    break;
+
+                default:
+                    appController.setCurrentActiveChat(AppController.CHATROOM_TYPE_PUBLIC, null);
+                    appController.setCurrentActiveChat(AppController.CHATROOM_TYPE_PRIVATE, null);
+                    startActivity(new Intent(getApplicationContext(), FindConnectionActivity.class));
+                    break;
             }
         }
     }
@@ -232,6 +278,8 @@ public class BaseDrawerActivity extends AppCompatActivity implements NavigationV
                 finish();
                 break;
             case R.layout.activity_findconn:
+                appController.setCurrentActiveChat(AppController.CHATROOM_TYPE_PUBLIC, null);
+                appController.setCurrentActiveChat(AppController.CHATROOM_TYPE_PRIVATE, null);
                 startActivity(new Intent(getApplicationContext(), FindConnectionActivity.class));
                 break;
             case R.layout.activity_chat:
@@ -240,11 +288,11 @@ public class BaseDrawerActivity extends AppCompatActivity implements NavigationV
                 ChatBO bo = ((AppController) getApplication()).getChat(item.getTitle().toString());
 
                 if (bo.isPublicChat()) {
-                    ((AppController) getApplication()).setCurrentActivePublicChat(bo);
-                    ((AppController) getApplication()).setCurrentActiveChatTypeToPublic();
+                    appController.setCurrentActivePublicChat(bo);
+                    appController.setCurrentActiveChatTypeToPublic();
                 } else {
-                    ((AppController) getApplication()).setCurrentActivePrivateChat(bo);
-                    ((AppController) getApplication()).setCurrentActiveChatTypeToPrivate();
+                    appController.setCurrentActivePrivateChat(bo);
+                    appController.setCurrentActiveChatTypeToPrivate();
                 }
 
                 startActivity(i);
@@ -417,6 +465,14 @@ public class BaseDrawerActivity extends AppCompatActivity implements NavigationV
                 startActivity(new Intent(getApplicationContext(), FindConnectionActivity.class));
             }
         };
+    }
+
+    protected void clearReferences() {
+        Activity currentActivity = appController.getCurrentActivity();
+
+        if (this.equals(currentActivity)) {
+            appController.setCurrentActivity(null);
+        }
     }
 }
 

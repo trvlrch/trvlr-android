@@ -1,5 +1,6 @@
 package ch.trvlr.trvlr;
 
+import android.app.Activity;
 import android.app.Application;
 import android.text.TextUtils;
 
@@ -23,8 +24,14 @@ public class AppController extends Application {
     public static final int CHATROOM_TYPE_PRIVATE = 2;
     public static final int CHATROOM_EMPTY = -1;
 
+
+    // ----- State.
+
     private RequestQueue mRequestQueue;
     private static AppController mInstance;
+
+    // Current acvitve activity.
+    private Activity currentActivity;
 
     // Public chat activities.
     private LinkedList<ChatBO> publicChats;
@@ -37,7 +44,7 @@ public class AppController extends Application {
     // Current chat type.
     private int currentActiveChatType;
 
-    // Myself.
+    // Current traveler.
     private TravelerBO currentUser;
 
     @Override
@@ -46,6 +53,7 @@ public class AppController extends Application {
         super.onCreate();
 
         // Init variables.
+        currentActivity = null;
         publicChats = new LinkedList<>();
         privateChats = new LinkedList<>();
         currentActivePublicChatId = CHATROOM_EMPTY;
@@ -286,5 +294,16 @@ public class AppController extends Application {
 
     public ChatBO getPrivateChat(String chatName) {
         return getChat(CHATROOM_TYPE_PRIVATE, chatName);
+    }
+
+
+    // ----- Activity utils.
+
+    public Activity getCurrentActivity() {
+        return currentActivity;
+    }
+
+    public void setCurrentActivity(Activity currentActivity) {
+        this.currentActivity = currentActivity;
     }
 }
