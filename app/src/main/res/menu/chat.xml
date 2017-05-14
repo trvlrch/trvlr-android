@@ -8,12 +8,12 @@
         android:title="List travelers"
         app:showAsAction="ifRoom"/>
 
-    <item android:id="@+id/logout"
-        android:title="Logout"
+    <item android:id="@+id/leave_chat_room"
+        android:title="Leave chat room"
         app:showAsAction="never"/>
 
-    <item android:id="@+id/leave"
-        android:title="Leave chat"
+    <item android:id="@+id/logout"
+        android:title="Logout"
         app:showAsAction="never"/>
 
 </menu>

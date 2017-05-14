@@ -236,7 +236,7 @@ public class ChatActivity extends BaseDrawerActivity {
                 finish();
                 break;
 
-            case R.id.leave:
+            case R.id.leave_chat_room:
                 leaveChat();
                 break;
 
