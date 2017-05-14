@@ -3,6 +3,7 @@ package ch.trvlr.trvlr.ui;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
@@ -79,20 +80,58 @@ public class FindConnectionActivity extends BaseDrawerActivity {
             }
         });
 
-        // Close AutoCompleteTextView elements when selecting an option.
         fromTextView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                // Close AutoCompleteTextView elements when selecting an option.
                 InputMethodManager in = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 in.hideSoftInputFromWindow(view.getApplicationWindowToken(), 0);
+
+                // Set focus to the "to" text view.
+                toTextView.setFocusableInTouchMode(true);
+                toTextView.requestFocus();
+            }
+        });
+
+        fromTextView.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                // If the event is a key-down event on the "enter" button.
+                if ((event.getAction() == KeyEvent.ACTION_DOWN) &&
+                        (keyCode == KeyEvent.KEYCODE_ENTER)) {
+                    // Set focus to the "to" text view.
+                    toTextView.setFocusableInTouchMode(true);
+                    toTextView.requestFocus();
+
+                    return true;
+                }
+
+                return false;
             }
         });
 
         toTextView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                // Close AutoCompleteTextView elements when selecting an option.
                 InputMethodManager in = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 in.hideSoftInputFromWindow(view.getApplicationWindowToken(), 0);
+            }
+        });
+
+        toTextView.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                // If the event is a key-down event on the "enter" button.
+                if ((event.getAction() == KeyEvent.ACTION_DOWN) &&
+                        (keyCode == KeyEvent.KEYCODE_ENTER)) {
+                    // Find connection.
+                    btnfindConn.performClick();
+
+                    return true;
+                }
+
+                return false;
             }
         });
     }
