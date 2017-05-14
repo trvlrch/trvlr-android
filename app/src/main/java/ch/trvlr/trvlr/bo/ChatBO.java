@@ -99,6 +99,8 @@ public class ChatBO {
         return this.chatType == CHATROOM_TYPE_PRIVATE;
     }
 
+    public int getChatType() { return this.chatType; }
+
     public boolean isFullyInitialized() {
         return this.fullyInitialized;
     }

@@ -189,13 +189,17 @@ public class AppController extends Application {
     }
 
     public void setCurrentActiveChat(int chatType, ChatBO bo) {
-        int chatId = bo.getChatId();
+        int chatId = CHATROOM_EMPTY;
 
-        if (getChat(chatType, chatId) == null) {
-            // New chat, add it.
-            addChat(chatType, bo);
-        } else {
-            // Existing chat, nothing to add.
+        if (bo != null) {
+            chatId = bo.getChatId();
+
+            if (getChat(chatType, chatId) == null) {
+                // New chat, add it.
+                addChat(chatType, bo);
+            } else {
+                // Existing chat, nothing to add.
+            }
         }
 
         this.setCurrentActiveChatId(chatType, chatId);

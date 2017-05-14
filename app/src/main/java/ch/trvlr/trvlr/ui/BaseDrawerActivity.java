@@ -353,7 +353,7 @@ public class BaseDrawerActivity extends AppCompatActivity implements NavigationV
             ChatBO bo = AppController.getInstance().getCurrentActiveChat();
             String chat = bo.isPublicChat() ? "public-chats" : "private-chats";
             int chatId = bo.getChatId();
-            final String json = new JSONObject().put("travelerId", travelerId).toString();
+            final String json = new JSONObject().put("travelerId", currentUser.getId()).toString();
 
             AppController.getInstance().addToRequestQueue(new StringRequest(Request.Method.POST,
                     "http://trvlr.ch:8080/api/" + chat + "/" + chatId + "/leave",
@@ -396,6 +396,12 @@ public class BaseDrawerActivity extends AppCompatActivity implements NavigationV
                 ChatBO bo = controller.getCurrentActiveChat();
                 controller.removeChat(bo.getChatId(), controller.getCurrentActiveChatType());
                 finish();
+
+                // Reset current active chat.
+                controller.setCurrentActiveChat(bo.getChatType(), null);
+
+                // Show find connection after leaving a chat room.
+                startActivity(new Intent(getApplicationContext(), FindConnectionActivity.class));
             }
         };
     }
