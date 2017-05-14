@@ -8,6 +8,7 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -47,6 +48,9 @@ public class AppController extends Application {
     // Current traveler.
     private Traveler currentUser;
 
+    // ChatComparator.
+    private ChatComparator cc;
+
     @Override
     public void onCreate() {
         // Call super constructor.
@@ -59,6 +63,7 @@ public class AppController extends Application {
         currentActivePublicChatId = CHATROOM_EMPTY;
         currentActivePrivateChatId = CHATROOM_EMPTY;
         currentActiveChatType = CHATROOM_TYPE_PUBLIC;
+        cc = new ChatComparator();
 
         // Save instance.
         mInstance = this;
@@ -148,6 +153,7 @@ public class AppController extends Application {
             case CHATROOM_TYPE_PUBLIC:
                 if (getChat(CHATROOM_TYPE_PUBLIC, bo.getChatId()) == null) {
                     this.publicChats.add(bo);
+                    this.publicChats.sort(cc);
                 }
 
                 break;
@@ -155,6 +161,7 @@ public class AppController extends Application {
             case CHATROOM_TYPE_PRIVATE:
                 if (getChat(CHATROOM_TYPE_PRIVATE, bo.getChatId()) == null) {
                     this.privateChats.add(bo);
+                    this.privateChats.sort(cc);
                 }
                 break;
         }
@@ -305,5 +312,14 @@ public class AppController extends Application {
 
     public void setCurrentActivity(Activity currentActivity) {
         this.currentActivity = currentActivity;
+    }
+
+    // ----- Inner classes.
+
+    static class ChatComparator implements Comparator<Chat> {
+        @Override
+        public int compare(Chat c1, Chat c2) {
+            return c1.getChatName().compareTo(c2.getChatName());
+        }
     }
 }
