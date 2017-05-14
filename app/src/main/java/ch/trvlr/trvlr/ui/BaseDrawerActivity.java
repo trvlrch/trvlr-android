@@ -222,8 +222,6 @@ public class BaseDrawerActivity extends AppCompatActivity implements NavigationV
                 currentActivityClass = appController.getCurrentActivity().getLocalClassName();
             }
 
-            Toast.makeText(BaseDrawerActivity.this, currentActivityClass, Toast.LENGTH_LONG).show();
-
             switch (currentActivityClass) {
                 case "ui.ChatActivity":
                     if (activeChat.getChatType() == AppController.CHATROOM_TYPE_PRIVATE && activePublicChat != null) {
