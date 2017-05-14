@@ -15,17 +15,22 @@ import android.view.SubMenu;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
 import com.google.firebase.auth.FirebaseAuth;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
 import java.util.LinkedList;
 
 import ch.trvlr.trvlr.AppController;
@@ -284,17 +289,9 @@ public class BaseDrawerActivity extends AppCompatActivity implements NavigationV
         }
 
         // Add logout menu item.
-        SubMenu settingsMenu = menu.addSubMenu("Settings");
-        settingsMenu.add(Menu.NONE, R.layout.activity_login, Menu.NONE, "Logout");
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (mDrawerToggle.onOptionsItemSelected(item)) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
+        // TODO clean up
+        //SubMenu settingsMenu = menu.addSubMenu("Settings");
+        //settingsMenu.add(Menu.NONE, R.layout.activity_login, Menu.NONE, "Logout");
     }
 
     @Override
@@ -307,6 +304,100 @@ public class BaseDrawerActivity extends AppCompatActivity implements NavigationV
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         mDrawerToggle.onConfigurationChanged(newConfig);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(final Menu menu) {
+        getMenuInflater().inflate(R.menu.settings, menu);
+
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        Intent i;
+        Bundle b;
+
+        if (mDrawerToggle.onOptionsItemSelected(item)) {
+            return true;
+        }
+
+        switch (item.getItemId()) {
+            case R.id.list_travelers:
+                i = new Intent(getApplicationContext(), ListPublicChatMembersActivity.class);
+                b = new Bundle();
+                b.putInt("chatId", chatId);
+                i.putExtras(b);
+                startActivity(i);
+                break;
+
+            case R.id.logout:
+                FirebaseAuth.getInstance().signOut();
+                startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+                finish();
+                break;
+
+            case R.id.leave_chat_room:
+                leaveChat();
+                break;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+
+        return true;
+    }
+
+    private void leaveChat() {
+        try {
+            ChatBO bo = AppController.getInstance().getCurrentActiveChat();
+            String chat = bo.isPublicChat() ? "public-chats" : "private-chats";
+            int chatId = bo.getChatId();
+            final String json = new JSONObject().put("travelerId", travelerId).toString();
+
+            AppController.getInstance().addToRequestQueue(new StringRequest(Request.Method.POST,
+                    "http://trvlr.ch:8080/api/" + chat + "/" + chatId + "/leave",
+                    leaveChatSuccess(),
+                    loadError()) {
+                @Override
+                public String getBodyContentType() {
+                    return "application/json; charset=utf-8";
+                }
+
+                @Override
+                public byte[] getBody() throws AuthFailureError {
+                    try {
+                        return json == null ? null : json.getBytes("utf-8");
+                    } catch (UnsupportedEncodingException e) {
+                        e.printStackTrace();
+                        return null;
+                    }
+                }
+
+                @Override
+                protected Response<String> parseNetworkResponse(NetworkResponse response) {
+                    String responseString = "";
+                    if (response != null) {
+                        responseString = String.valueOf(response.statusCode);
+                    }
+                    return Response.success(responseString, HttpHeaderParser.parseCacheHeaders(response));
+                }
+            });
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private Response.Listener leaveChatSuccess() {
+        return new Response.Listener() {
+            @Override
+            public void onResponse(Object response) {
+                AppController controller = AppController.getInstance();
+                ChatBO bo = controller.getCurrentActiveChat();
+                controller.removeChat(bo.getChatId(), controller.getCurrentActiveChatType());
+                finish();
+            }
+        };
     }
 }
 

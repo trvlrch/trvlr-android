@@ -1,23 +1,13 @@
 package ch.trvlr.trvlr.ui;
 
-import android.content.Intent;
-import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.NetworkResponse;
-import com.android.volley.Request.Method;
-import com.android.volley.Response;
-import com.android.volley.toolbox.HttpHeaderParser;
-import com.android.volley.toolbox.StringRequest;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -25,19 +15,17 @@ import com.google.firebase.auth.GetTokenResult;
 import com.google.gson.Gson;
 
 import org.java_websocket.WebSocket;
-import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
 import ch.trvlr.trvlr.AppController;
-import ch.trvlr.trvlr.model.Message;
-import ch.trvlr.trvlr.adapter.MessageAdapter;
 import ch.trvlr.trvlr.R;
+import ch.trvlr.trvlr.adapter.MessageAdapter;
 import ch.trvlr.trvlr.bo.ChatBO;
+import ch.trvlr.trvlr.model.Message;
 import rx.functions.Action1;
 import ua.naiksoftware.stomp.LifecycleEvent;
 import ua.naiksoftware.stomp.Stomp;
@@ -206,94 +194,4 @@ public class ChatActivity extends BaseDrawerActivity {
                     }
                 });
     }
-
-    @Override
-    public boolean onCreateOptionsMenu(final Menu menu) {
-        getMenuInflater().inflate(R.menu.settings, menu);
-
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        Intent i;
-        Bundle b;
-
-        switch (item.getItemId())
-        {
-            case R.id.list_travelers:
-                i = new Intent(getApplicationContext(), ListPublicChatMembersActivity.class);
-                b = new Bundle();
-                b.putInt("chatId", chatId);
-                i.putExtras(b);
-                startActivity(i);
-                break;
-
-            // TODO: already gets handled in base drawer acitivity
-            case R.id.logout:
-                FirebaseAuth.getInstance().signOut();
-                startActivity(new Intent(getApplicationContext(), LoginActivity.class));
-                finish();
-                break;
-
-            case R.id.leave_chat_room:
-                leaveChat();
-                break;
-
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-        return true;
-    }
-
-    private void leaveChat() {
-        try {
-            String chat = bo.isPublicChat() ? "public-chats" : "private-chats";
-            int chatId = bo.getChatId();
-            final String json = new JSONObject().put("travelerId", travelerId).toString();
-
-            AppController.getInstance().addToRequestQueue(new StringRequest(Method.POST,
-                    "http://trvlr.ch:8080/api/" + chat + "/" + chatId + "/leave",
-                    leaveChatSuccess(),
-                    loadError()) {
-                @Override
-                public String getBodyContentType() {
-                    return "application/json; charset=utf-8";
-                }
-
-                @Override
-                public byte[] getBody() throws AuthFailureError {
-                    try {
-                        return json == null ? null : json.getBytes("utf-8");
-                    } catch (UnsupportedEncodingException e) {
-                        e.printStackTrace();
-                        return null;
-                    }
-                }
-
-                @Override
-                protected Response<String> parseNetworkResponse(NetworkResponse response) {
-                    String responseString = "";
-                    if (response != null) {
-                        responseString = String.valueOf(response.statusCode);
-                    }
-                    return Response.success(responseString, HttpHeaderParser.parseCacheHeaders(response));
-                }
-            });
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private Response.Listener leaveChatSuccess() {
-        return new Response.Listener() {
-            @Override
-            public void onResponse(Object response) {
-                AppController controller = AppController.getInstance();
-                controller.removeChat(bo.getChatId(), controller.getCurrentActiveChatType());
-                finish();
-            }
-        };
-    }
-
 }
