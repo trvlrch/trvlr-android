@@ -346,11 +346,6 @@ public class BaseDrawerActivity extends AppCompatActivity implements NavigationV
         for (Chat bo : privateChats) {
             privateChatsMenu.add(Menu.NONE, R.layout.activity_chat, Menu.NONE, bo.getChatName());
         }
-
-        // Add logout menu item.
-        // TODO clean up
-        //SubMenu settingsMenu = menu.addSubMenu("Settings");
-        //settingsMenu.add(Menu.NONE, R.layout.activity_login, Menu.NONE, "Logout");
     }
 
     @Override
@@ -368,6 +363,25 @@ public class BaseDrawerActivity extends AppCompatActivity implements NavigationV
     @Override
     public boolean onCreateOptionsMenu(final Menu menu) {
         getMenuInflater().inflate(R.menu.settings, menu);
+
+        Chat activeChat = appController.getCurrentActiveChat();
+        Activity currentActivity = appController.getCurrentActivity();
+        String currentActivityClass = "";
+
+        if (currentActivity != null) {
+            currentActivityClass = appController.getCurrentActivity().getLocalClassName();
+        }
+
+        boolean isChat = currentActivityClass.equals("ui.ChatActivity");
+        boolean isPublicChat = isChat && activeChat.isPublicChat();
+
+        if (!isChat) {
+            menu.removeItem(R.id.leave_chat_room);
+        }
+
+        if (!isPublicChat) {
+            menu.removeItem(R.id.list_travelers);
+        }
 
         return super.onCreateOptionsMenu(menu);
     }
