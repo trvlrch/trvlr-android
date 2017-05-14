@@ -276,4 +276,8 @@ public class AppController extends Application {
     public void addPrivateChat(ChatBO bo) {
         addChat(CHATROOM_TYPE_PRIVATE, bo);
     }
+
+    public ChatBO getPrivateChat(String chatName) {
+        return getChat(CHATROOM_TYPE_PRIVATE, chatName);
+    }
 }

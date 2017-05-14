@@ -102,9 +102,8 @@ public class ListPublicChatMembersActivity extends BaseDrawerActivity {
             @Override
             public void onResponse(JSONObject response) {
                 try {
+                    ChatBO bo = null;
                     Intent intent = new Intent(getApplicationContext(), ChatActivity.class);
-                    // We always create a new BO.
-                    // TODO: Actually, we don't.
                     int chatId = response.getInt("id");
                     JSONArray travelers = response.getJSONArray("allTravelers");
                     int uId1 = travelers.getJSONObject(0).getInt("id");
@@ -118,7 +117,12 @@ public class ListPublicChatMembersActivity extends BaseDrawerActivity {
                         travelers.getJSONObject(indexToLoad).getString("uid")
                     );
 
-                    ChatBO bo = new ChatBO(chatId, chatPartner.getFullname(), chatPartner);
+                    bo = AppController.getInstance().getPrivateChat(chatPartner.getFullname());
+
+                    if (bo == null) {
+                        bo = new ChatBO(chatId, chatPartner.getFullname(), chatPartner);
+                    }
+
                     ((AppController) getApplication()).setCurrentActivePrivateChat(bo);
                     ((AppController) getApplication()).setCurrentActiveChatTypeToPrivate();
                     startActivity(intent);
