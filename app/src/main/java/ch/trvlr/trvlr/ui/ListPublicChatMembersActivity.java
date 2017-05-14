@@ -19,8 +19,8 @@ import org.json.JSONObject;
 import ch.trvlr.trvlr.AppController;
 import ch.trvlr.trvlr.R;
 import ch.trvlr.trvlr.adapter.TravelerAdapter;
-import ch.trvlr.trvlr.bo.ChatBO;
-import ch.trvlr.trvlr.bo.TravelerBO;
+import ch.trvlr.trvlr.model.Chat;
+import ch.trvlr.trvlr.model.Traveler;
 
 import static com.android.volley.Request.Method;
 
@@ -49,7 +49,7 @@ public class ListPublicChatMembersActivity extends BaseDrawerActivity {
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                TravelerBO traveler = (TravelerBO) parent.getItemAtPosition(position);
+                Traveler traveler = (Traveler) parent.getItemAtPosition(position);
                 int uid1 = currentUser.getId();
                 int uid2 = traveler.getId();
 
@@ -77,10 +77,10 @@ public class ListPublicChatMembersActivity extends BaseDrawerActivity {
             @Override
             public void onResponse(JSONArray response) {
                 try {
-                    SparseArray<TravelerBO> sparseArray = new SparseArray<TravelerBO>();
+                    SparseArray<Traveler> sparseArray = new SparseArray<Traveler>();
 
                     for (int i = 0; i < response.length(); i++) {
-                        TravelerBO traveler = new TravelerBO(
+                        Traveler traveler = new Traveler(
                                 response.getJSONObject(i).getInt("id"),
                                 response.getJSONObject(i).getString("firstName"),
                                 response.getJSONObject(i).getString("lastName"),
@@ -108,14 +108,14 @@ public class ListPublicChatMembersActivity extends BaseDrawerActivity {
             @Override
             public void onResponse(JSONObject response) {
                 try {
-                    ChatBO bo = null;
+                    Chat bo = null;
                     Intent intent = new Intent(getApplicationContext(), ChatActivity.class);
                     int chatId = response.getInt("id");
                     JSONArray travelers = response.getJSONArray("allTravelers");
                     int uId1 = travelers.getJSONObject(0).getInt("id");
                     int uId2 = travelers.getJSONObject(1).getInt("id");
                     int indexToLoad = uId1 != currentUser.getId() ? 0 : 1;
-                    TravelerBO chatPartner = new TravelerBO(
+                    Traveler chatPartner = new Traveler(
                         travelers.getJSONObject(indexToLoad).getInt("id"),
                         travelers.getJSONObject(indexToLoad).getString("firstName"),
                         travelers.getJSONObject(indexToLoad).getString("lastName"),
@@ -126,7 +126,7 @@ public class ListPublicChatMembersActivity extends BaseDrawerActivity {
                     bo = AppController.getInstance().getPrivateChat(chatPartner.getFullname());
 
                     if (bo == null) {
-                        bo = new ChatBO(chatId, chatPartner.getFullname(), chatPartner);
+                        bo = new Chat(chatId, chatPartner.getFullname(), chatPartner);
                     }
 
                     ((AppController) getApplication()).setCurrentActivePrivateChat(bo);

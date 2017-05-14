@@ -24,7 +24,7 @@ import java.util.List;
 import ch.trvlr.trvlr.AppController;
 import ch.trvlr.trvlr.R;
 import ch.trvlr.trvlr.adapter.MessageAdapter;
-import ch.trvlr.trvlr.bo.ChatBO;
+import ch.trvlr.trvlr.model.Chat;
 import ch.trvlr.trvlr.model.Message;
 import rx.functions.Action1;
 import ua.naiksoftware.stomp.LifecycleEvent;
@@ -39,7 +39,7 @@ public class ChatActivity extends BaseDrawerActivity {
     protected EditText chatText;
     protected String chatName;
     protected MessageAdapter adapter;
-    protected ChatBO bo;
+    protected Chat bo;
 
     // Dynamic data per chat room.
     protected StompClient mStompClient;

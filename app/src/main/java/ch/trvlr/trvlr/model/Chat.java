@@ -1,12 +1,11 @@
-package ch.trvlr.trvlr.bo;
+package ch.trvlr.trvlr.model;
 
 import android.widget.ListView;
 
 import ch.trvlr.trvlr.AppController;
-import ch.trvlr.trvlr.bo.TravelerBO;
 import ua.naiksoftware.stomp.client.StompClient;
 
-public class ChatBO {
+public class Chat {
 
     // Static
     public final static int CHATROOM_TYPE_PUBLIC = AppController.CHATROOM_TYPE_PUBLIC;
@@ -25,10 +24,10 @@ public class ChatBO {
     private boolean fullyInitialized;
 
     // Private chat fields.
-    private TravelerBO chatPartner;
+    private Traveler chatPartner;
 
-    public ChatBO(int chatId, String chatName, StompClient mStompClient,
-                  ListView messagesContainer, int chatType) {
+    public Chat(int chatId, String chatName, StompClient mStompClient,
+                ListView messagesContainer, int chatType) {
         this.chatId = chatId;
         this.chatName = chatName;
         this.mStompClient = mStompClient;
@@ -37,7 +36,7 @@ public class ChatBO {
         this.fullyInitialized = true;
     }
 
-    public ChatBO(int chatId, String chatName, TravelerBO chatPartner) {
+    public Chat(int chatId, String chatName, Traveler chatPartner) {
         this.chatId = chatId;
         this.chatName = chatName;
         this.chatPartner = chatPartner;
@@ -45,7 +44,7 @@ public class ChatBO {
         this.fullyInitialized = false;
     }
 
-    public ChatBO(int chatId, String chatName, int chatType) {
+    public Chat(int chatId, String chatName, int chatType) {
         this.chatId = chatId;
         this.chatName = chatName;
         this.chatType = chatType;

@@ -36,8 +36,8 @@ import java.util.LinkedList;
 
 import ch.trvlr.trvlr.AppController;
 import ch.trvlr.trvlr.R;
-import ch.trvlr.trvlr.bo.ChatBO;
-import ch.trvlr.trvlr.bo.TravelerBO;
+import ch.trvlr.trvlr.model.Chat;
+import ch.trvlr.trvlr.model.Traveler;
 
 public class BaseDrawerActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
@@ -56,7 +56,7 @@ public class BaseDrawerActivity extends AppCompatActivity implements NavigationV
     protected Menu menu;
     protected int travelerId = -1;
     protected int chatId = -1;
-    protected TravelerBO currentUser = null;
+    protected Traveler currentUser = null;
     protected AppController appController = null;
 
     @Override
@@ -126,7 +126,7 @@ public class BaseDrawerActivity extends AppCompatActivity implements NavigationV
                 try {
                     travelerId = response.getInt("id");
 
-                    currentUser = new TravelerBO(
+                    currentUser = new Traveler(
                         response.getInt("id"),
                         response.getString("firstName"),
                         response.getString("lastName"),
@@ -169,7 +169,7 @@ public class BaseDrawerActivity extends AppCompatActivity implements NavigationV
 //                        Toast.makeText(BaseDrawerActivity.this, "Can not chats (Type: " + chatType + ")", Toast.LENGTH_LONG).show();
                     } else {
                         for (int i = 0; i < response.length(); i++) {
-                            ChatBO bo = null;
+                            Chat bo = null;
 
                             if (chatType == AppController.CHATROOM_TYPE_PRIVATE) {
                                 JSONArray travelers = response.getJSONObject(i).getJSONArray("allTravelers");
@@ -178,20 +178,20 @@ public class BaseDrawerActivity extends AppCompatActivity implements NavigationV
                                     int uId1 = travelers.getJSONObject(0).getInt("id");
                                     int uId2 = travelers.getJSONObject(1).getInt("id");
                                     int indexToLoad = uId1 != currentUser.getId() ? 0 : 1;
-                                    TravelerBO chatPartner = new TravelerBO(
+                                    Traveler chatPartner = new Traveler(
                                             travelers.getJSONObject(indexToLoad).getInt("id"),
                                             travelers.getJSONObject(indexToLoad).getString("firstName"),
                                             travelers.getJSONObject(indexToLoad).getString("lastName"),
                                             travelers.getJSONObject(indexToLoad).getString("email"),
                                             travelers.getJSONObject(indexToLoad).getString("uid")
                                     );
-                                    bo = new ChatBO(response.getJSONObject(i).getInt("id"), chatPartner.getFullname(), chatPartner);
+                                    bo = new Chat(response.getJSONObject(i).getInt("id"), chatPartner.getFullname(), chatPartner);
                                 }
                             } else {
                                 String from = response.getJSONObject(i).getJSONObject("from").getString("name");
                                 String to = response.getJSONObject(i).getJSONObject("to").getString("name");
 
-                                bo = new ChatBO(response.getJSONObject(i).getInt("id"), from + " - " + to, ChatBO.CHATROOM_TYPE_PUBLIC);
+                                bo = new Chat(response.getJSONObject(i).getInt("id"), from + " - " + to, Chat.CHATROOM_TYPE_PUBLIC);
                             }
 
                             if (bo != null) {
@@ -213,8 +213,8 @@ public class BaseDrawerActivity extends AppCompatActivity implements NavigationV
         if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
             mDrawerLayout.closeDrawer(GravityCompat.START);
         } else {
-            ChatBO activeChat = appController.getCurrentActiveChat();
-            ChatBO activePublicChat = appController.getCurrentActivePublicChat();
+            Chat activeChat = appController.getCurrentActiveChat();
+            Chat activePublicChat = appController.getCurrentActivePublicChat();
             Activity currentActivity = appController.getCurrentActivity();
             String currentActivityClass = "";
 
@@ -285,7 +285,7 @@ public class BaseDrawerActivity extends AppCompatActivity implements NavigationV
             case R.layout.activity_chat:
                 i = new Intent(getApplicationContext(), ChatActivity.class);
                 // Get the right bo of this chat room.
-                ChatBO bo = ((AppController) getApplication()).getChat(item.getTitle().toString());
+                Chat bo = ((AppController) getApplication()).getChat(item.getTitle().toString());
 
                 if (bo.isPublicChat()) {
                     appController.setCurrentActivePublicChat(bo);
@@ -337,15 +337,15 @@ public class BaseDrawerActivity extends AppCompatActivity implements NavigationV
 
         // Add public chat menu items.
         SubMenu publicChatsMenu = menu.addSubMenu("Public chats");
-        LinkedList<ChatBO> publicChats = ((AppController) this.getApplication()).getPublicChats();
-        for (ChatBO bo : publicChats) {
+        LinkedList<Chat> publicChats = ((AppController) this.getApplication()).getPublicChats();
+        for (Chat bo : publicChats) {
             publicChatsMenu.add(Menu.NONE, R.layout.activity_chat, Menu.NONE, bo.getChatName());
         }
 
         // Add private chat menu items.
         SubMenu privateChatsMenu = menu.addSubMenu("Private chats");
-        LinkedList<ChatBO> privateChats = ((AppController) this.getApplication()).getPrivateChats();
-        for (ChatBO bo : privateChats) {
+        LinkedList<Chat> privateChats = ((AppController) this.getApplication()).getPrivateChats();
+        for (Chat bo : privateChats) {
             privateChatsMenu.add(Menu.NONE, R.layout.activity_chat, Menu.NONE, bo.getChatName());
         }
 
@@ -411,7 +411,7 @@ public class BaseDrawerActivity extends AppCompatActivity implements NavigationV
 
     private void leaveChat() {
         try {
-            ChatBO bo = AppController.getInstance().getCurrentActiveChat();
+            Chat bo = AppController.getInstance().getCurrentActiveChat();
             String chat = bo.isPublicChat() ? "public-chats" : "private-chats";
             int chatId = bo.getChatId();
             final String json = new JSONObject().put("travelerId", currentUser.getId()).toString();
@@ -454,7 +454,7 @@ public class BaseDrawerActivity extends AppCompatActivity implements NavigationV
             @Override
             public void onResponse(Object response) {
                 AppController controller = AppController.getInstance();
-                ChatBO bo = controller.getCurrentActiveChat();
+                Chat bo = controller.getCurrentActiveChat();
                 controller.removeChat(bo.getChatId(), controller.getCurrentActiveChatType());
                 finish();
 

@@ -1,6 +1,6 @@
-package ch.trvlr.trvlr.bo;
+package ch.trvlr.trvlr.model;
 
-public class TravelerBO {
+public class Traveler {
 
 
     // ----- State.
@@ -14,7 +14,7 @@ public class TravelerBO {
 
     // ----- Constructors.
 
-    public TravelerBO(int id, String firstname, String lastname, String email, String uid) {
+    public Traveler(int id, String firstname, String lastname, String email, String uid) {
         this.id = id;
         this.firstname = firstname;
         this.lastname = lastname;

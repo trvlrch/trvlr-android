@@ -9,15 +9,15 @@ import android.widget.TextView;
 
 import java.util.LinkedList;
 
-import ch.trvlr.trvlr.bo.TravelerBO;
+import ch.trvlr.trvlr.model.Traveler;
 
 public class TravelerAdapter extends BaseAdapter {
 
     // ----- State.
 
-    private LinkedList<TravelerBO> travelers;
+    private LinkedList<Traveler> travelers;
 
-    public TravelerAdapter(SparseArray<TravelerBO> sparseArray) {
+    public TravelerAdapter(SparseArray<Traveler> sparseArray) {
         travelers = new LinkedList<>();
 
         for (int i = 0; i < sparseArray.size(); i++) {
@@ -32,7 +32,7 @@ public class TravelerAdapter extends BaseAdapter {
 
 
     @Override
-    public TravelerBO getItem(int position) {
+    public Traveler getItem(int position) {
         return travelers.get(position);
     }
 
@@ -44,7 +44,7 @@ public class TravelerAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View view = LayoutInflater.from(parent.getContext()).inflate(android.R.layout.simple_list_item_1, parent, false);
-        TravelerBO item = this.getItem(position);
+        Traveler item = this.getItem(position);
         ((TextView) view.findViewById(android.R.id.text1)).setText(item.getFullname());
 
         return view;

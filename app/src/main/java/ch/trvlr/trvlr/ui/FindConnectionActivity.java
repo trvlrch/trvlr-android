@@ -24,7 +24,7 @@ import java.util.ArrayList;
 
 import ch.trvlr.trvlr.AppController;
 import ch.trvlr.trvlr.R;
-import ch.trvlr.trvlr.bo.ChatBO;
+import ch.trvlr.trvlr.model.Chat;
 
 import static com.android.volley.Request.Method;
 
@@ -110,7 +110,7 @@ public class FindConnectionActivity extends BaseDrawerActivity {
                         Intent intent = new Intent(getApplicationContext(), ChatActivity.class);
                         // We always create a new BO.
                         // TODO check for duplicate connections before executing this code.
-                        ChatBO bo = new ChatBO(response.getJSONObject(0).getInt("id"), from + " - " + to, ChatBO.CHATROOM_TYPE_PUBLIC);
+                        Chat bo = new Chat(response.getJSONObject(0).getInt("id"), from + " - " + to, Chat.CHATROOM_TYPE_PUBLIC);
                         ((AppController) getApplication()).setCurrentActivePublicChat(bo);
                         ((AppController) getApplication()).setCurrentActiveChatTypeToPublic();
                         startActivity(intent);

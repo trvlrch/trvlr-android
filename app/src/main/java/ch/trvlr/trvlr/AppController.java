@@ -12,8 +12,8 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-import ch.trvlr.trvlr.bo.ChatBO;
-import ch.trvlr.trvlr.bo.TravelerBO;
+import ch.trvlr.trvlr.model.Chat;
+import ch.trvlr.trvlr.model.Traveler;
 
 public class AppController extends Application {
 
@@ -34,18 +34,18 @@ public class AppController extends Application {
     private Activity currentActivity;
 
     // Public chat activities.
-    private LinkedList<ChatBO> publicChats;
+    private LinkedList<Chat> publicChats;
     private int currentActivePublicChatId;
 
     // Private chat activities.
-    private LinkedList<ChatBO> privateChats;
+    private LinkedList<Chat> privateChats;
     private int currentActivePrivateChatId;
 
     // Current chat type.
     private int currentActiveChatType;
 
     // Current traveler.
-    private TravelerBO currentUser;
+    private Traveler currentUser;
 
     @Override
     public void onCreate() {
@@ -96,11 +96,11 @@ public class AppController extends Application {
 
     // ----- Current user.
 
-    public TravelerBO getCurrentUser() {
+    public Traveler getCurrentUser() {
         return currentUser;
     }
 
-    public void setCurrentUser(TravelerBO currentUser) {
+    public void setCurrentUser(Traveler currentUser) {
         this.currentUser = currentUser;
     }
 
@@ -131,7 +131,7 @@ public class AppController extends Application {
         }
     }
 
-    public LinkedList<ChatBO> getChats(int chatType) {
+    public LinkedList<Chat> getChats(int chatType) {
         switch (chatType) {
             case CHATROOM_TYPE_PUBLIC:
                 return this.publicChats;
@@ -143,7 +143,7 @@ public class AppController extends Application {
         return null;
     }
 
-    public void addChat(int chatType, ChatBO bo) {
+    public void addChat(int chatType, Chat bo) {
         switch (chatType) {
             case CHATROOM_TYPE_PUBLIC:
                 if (getChat(CHATROOM_TYPE_PUBLIC, bo.getChatId()) == null) {
@@ -160,11 +160,11 @@ public class AppController extends Application {
         }
     }
 
-    public ChatBO getChat(int chatType, int chatId) {
-        LinkedList<ChatBO> chats = this.getChats(chatType);
+    public Chat getChat(int chatType, int chatId) {
+        LinkedList<Chat> chats = this.getChats(chatType);
 
         if (chats != null) {
-            for (ChatBO i : chats) {
+            for (Chat i : chats) {
                 if (i.getChatId() == chatId) {
                     return i;
                 }
@@ -174,11 +174,11 @@ public class AppController extends Application {
         return null;
     }
 
-    public ChatBO getChat(int chatType, String chatName) {
-        LinkedList<ChatBO> chats = this.getChats(chatType);
+    public Chat getChat(int chatType, String chatName) {
+        LinkedList<Chat> chats = this.getChats(chatType);
 
         if (chats != null) {
-            for (ChatBO i : chats) {
+            for (Chat i : chats) {
                 if (i.getChatName() == chatName) {
                     return i;
                 }
@@ -188,15 +188,15 @@ public class AppController extends Application {
         return null;
     }
 
-    public ChatBO getCurrentActiveChat(int chatType) {
+    public Chat getCurrentActiveChat(int chatType) {
         return getChat(chatType, getCurrentActiveChatId(chatType));
     }
 
-    public ChatBO getCurrentActiveChat() {
+    public Chat getCurrentActiveChat() {
         return getChat(getCurrentActiveChatType(), getCurrentActiveChatId(getCurrentActiveChatType()));
     }
 
-    public void setCurrentActiveChat(int chatType, ChatBO bo) {
+    public void setCurrentActiveChat(int chatType, Chat bo) {
         int chatId = CHATROOM_EMPTY;
 
         if (bo != null) {
@@ -222,8 +222,8 @@ public class AppController extends Application {
         this.currentActiveChatType = currentActiveChatType;
     }
 
-    public ChatBO getChat(String chatName) {
-        ChatBO chat = null;
+    public Chat getChat(String chatName) {
+        Chat chat = null;
 
         chat = getChat(CHATROOM_TYPE_PRIVATE, chatName);
 
@@ -237,10 +237,10 @@ public class AppController extends Application {
     }
 
     public void removeChat(int chatId, int chatType) {
-        List<ChatBO> chats = (chatType == AppController.CHATROOM_TYPE_PUBLIC) ? publicChats : privateChats;
+        List<Chat> chats = (chatType == AppController.CHATROOM_TYPE_PUBLIC) ? publicChats : privateChats;
 
-        for (Iterator<ChatBO> iter = chats.listIterator(); iter.hasNext(); ) {
-            ChatBO chat = iter.next();
+        for (Iterator<Chat> iter = chats.listIterator(); iter.hasNext(); ) {
+            Chat chat = iter.next();
             if (chatId == chat.getChatId()) {
                 iter.remove();
             }
@@ -249,23 +249,23 @@ public class AppController extends Application {
 
     // ----- Shortcuts for public chats.
 
-    public ChatBO getPublicChat(int chatId) {
+    public Chat getPublicChat(int chatId) {
         return getChat(CHATROOM_TYPE_PUBLIC, chatId);
     }
 
-    public ChatBO getPublicChat(String chatName) {
+    public Chat getPublicChat(String chatName) {
         return getChat(CHATROOM_TYPE_PUBLIC, chatName);
     }
 
-    public LinkedList<ChatBO> getPublicChats() {
+    public LinkedList<Chat> getPublicChats() {
         return getChats(CHATROOM_TYPE_PUBLIC);
     }
 
-    public ChatBO getCurrentActivePublicChat() {
+    public Chat getCurrentActivePublicChat() {
         return getCurrentActiveChat(CHATROOM_TYPE_PUBLIC);
     }
 
-    public void setCurrentActivePublicChat(ChatBO bo) {
+    public void setCurrentActivePublicChat(Chat bo) {
         setCurrentActiveChat(CHATROOM_TYPE_PUBLIC, bo);
     }
 
@@ -276,7 +276,7 @@ public class AppController extends Application {
 
     // ----- Shortcuts for private chats.
 
-    public void setCurrentActivePrivateChat(ChatBO bo) {
+    public void setCurrentActivePrivateChat(Chat bo) {
         setCurrentActiveChat(CHATROOM_TYPE_PRIVATE, bo);
     }
 
@@ -284,15 +284,15 @@ public class AppController extends Application {
         setCurrentActiveChatType(CHATROOM_TYPE_PRIVATE);
     }
 
-    public LinkedList<ChatBO> getPrivateChats() {
+    public LinkedList<Chat> getPrivateChats() {
         return getChats(CHATROOM_TYPE_PRIVATE);
     }
 
-    public void addPrivateChat(ChatBO bo) {
+    public void addPrivateChat(Chat bo) {
         addChat(CHATROOM_TYPE_PRIVATE, bo);
     }
 
-    public ChatBO getPrivateChat(String chatName) {
+    public Chat getPrivateChat(String chatName) {
         return getChat(CHATROOM_TYPE_PRIVATE, chatName);
     }
 
