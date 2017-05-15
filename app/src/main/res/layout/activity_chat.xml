@@ -28,7 +28,8 @@
             android:layout_marginLeft="5dp"
             android:layout_toLeftOf="@+id/sendButton"
             android:hint="Type message"
-            android:maxLines="1" />
+            android:maxLines="1"
+            android:singleLine="true" />
 
         <Button android:id="@+id/sendButton"
             android:layout_width="64dp"
