@@ -151,7 +151,9 @@ public class ChatActivity extends BaseDrawerActivity {
             // We cannot add the list view as long it has a parent
             messagesContainer = bo.getMessagesContainer();
             ViewGroup oldParent = (ViewGroup) messagesContainer.getParent();
-            oldParent.removeView(messagesContainer);
+            if (oldParent != null) {
+                oldParent.removeView(messagesContainer);
+            }
 
             // Display list view from public chat
             currentParent.addView(messagesContainer, indexContainer);
