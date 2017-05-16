@@ -14,6 +14,14 @@ public class Traveler {
 
     // ----- Constructors.
 
+    /**
+     * Constructor for Traveler
+     *
+     * @param id int
+     * @param lastname String
+     * @param email String
+     * @param uid String
+     */
     public Traveler(int id, String firstname, String lastname, String email, String uid) {
         this.id = id;
         this.firstname = firstname;
@@ -68,6 +76,11 @@ public class Traveler {
 
     // ----- Helper methods.
 
+    /**
+     * Get fullname from firstname and lastname
+     *
+     * @return String
+     */
     public String getFullname() {
         return this.getFirstname() + " " + this.getLastname();
     }

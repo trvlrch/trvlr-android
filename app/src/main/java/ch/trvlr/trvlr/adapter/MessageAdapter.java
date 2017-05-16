@@ -22,26 +22,56 @@ public class MessageAdapter extends BaseAdapter {
     private List<Message> messages;
     private AppCompatActivity context;
 
+    /**
+     * Constructor for MessageAdapter
+     *
+     * @param context AppCompatActivity
+     * @param messages List
+     */
     public MessageAdapter(AppCompatActivity context, List<Message> messages) {
         this.context = context;
         this.messages = messages;
     }
 
+    /**
+     * Get number of messages
+     *
+     * @return int
+     */
     @Override
     public int getCount() {
         return messages.size();
     }
 
+    /**
+     * Get the message by index
+     * @param i int
+     * @return Message
+     */
     @Override
     public Message getItem(int i) {
         return messages.get(i);
     }
 
+    /**
+     * Get the message id by index
+     *
+     * @param i int
+     * @return long
+     */
     @Override
     public long getItemId(int i) {
         return getItem(i).getId();
     }
 
+    /**
+     * Create the view for a message by index
+     *
+     * @param i int
+     * @param view View
+     * @param viewGroup ViewGroup
+     * @return
+     */
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
         ViewHolder holder;
@@ -64,11 +94,16 @@ public class MessageAdapter extends BaseAdapter {
         return view;
     }
 
+    /**
+     * Add a message
+     *
+     * @param message Message
+     */
     public void add(Message message) {
         this.messages.add(message);
     }
 
-    int bla = 0;
+
     private void setAlignment(ViewHolder holder, boolean isMe) {
         if (isMe) {
             // Set 9 patch image as background and align chat bubble to the right

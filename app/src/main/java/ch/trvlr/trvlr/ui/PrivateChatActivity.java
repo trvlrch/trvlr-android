@@ -32,6 +32,9 @@ import ua.naiksoftware.stomp.client.StompMessage;
 public class PrivateChatActivity extends ChatActivity {
     private static final String TAG = "PrivateChatActivity";
 
+    /**
+     * Called to initialize this activity
+     */
     @Override
     protected void onStart() {
         super.onStart();

@@ -75,6 +75,9 @@ public class LoginActivity extends AppCompatActivity
         signInButton.setOnClickListener(this);
     }
 
+    /**
+     * Handle result from Auth.GoogleSignInApi intent
+     */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -118,6 +121,11 @@ public class LoginActivity extends AppCompatActivity
                 });
     }
 
+    /**
+     * Show message on failed connection
+     *
+     * @param connectionResult ConnectionResult
+     */
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
         Log.d(TAG, "onConnectionFailed:" + connectionResult);

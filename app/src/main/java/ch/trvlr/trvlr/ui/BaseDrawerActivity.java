@@ -208,6 +208,9 @@ public class BaseDrawerActivity extends AppCompatActivity implements NavigationV
         };
     }
 
+    /**
+     * Handle back button
+     */
     @Override
     public void onBackPressed() {
         if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
@@ -257,6 +260,12 @@ public class BaseDrawerActivity extends AppCompatActivity implements NavigationV
         }
     }
 
+    /**
+     * Handle for navigation action
+     *
+     * @param item MenuItem
+     * @return Boolean
+     */
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         int id = item.getItemId();
@@ -318,6 +327,12 @@ public class BaseDrawerActivity extends AppCompatActivity implements NavigationV
         };
     }
 
+    /**
+     * Rebuild the options menu
+     *
+     * @param menu Menu
+     * @return Boolean
+     */
     @Override
     public boolean onPrepareOptionsMenu(final Menu menu) {
         rebuildMenu();
@@ -348,18 +363,36 @@ public class BaseDrawerActivity extends AppCompatActivity implements NavigationV
         }
     }
 
+    /**
+     * Handler after onCreate is completed
+     *
+     * This hook is used to sync the state of the navigation drawer
+     *
+     * @param savedInstanceState Bundle
+     */
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         mDrawerToggle.syncState();
     }
 
+    /**
+     * Handler for configuration changes
+     *
+     * @param newConfig Configuration
+     */
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         mDrawerToggle.onConfigurationChanged(newConfig);
     }
 
+    /**
+     * Initialize options menu
+     *
+     * @param menu Menu
+     * @return Boolean
+     */
     @Override
     public boolean onCreateOptionsMenu(final Menu menu) {
         getMenuInflater().inflate(R.menu.settings, menu);
@@ -386,6 +419,12 @@ public class BaseDrawerActivity extends AppCompatActivity implements NavigationV
         return super.onCreateOptionsMenu(menu);
     }
 
+    /**
+     * Handler for options item action
+     *
+     * @param item MenuItem
+     * @return Boolean
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         Intent i;

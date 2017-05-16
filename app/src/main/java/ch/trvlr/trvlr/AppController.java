@@ -51,6 +51,9 @@ public class AppController extends Application {
     // ChatComparator.
     private ChatComparator cc;
 
+    /**
+     * Called when the application is starting
+     */
     @Override
     public void onCreate() {
         // Call super constructor.
@@ -69,6 +72,11 @@ public class AppController extends Application {
         mInstance = this;
     }
 
+    /**
+     * Get AppController instance
+     *
+     * @return AppController
+     */
     public static synchronized AppController getInstance() {
         return mInstance;
     }
@@ -81,17 +89,33 @@ public class AppController extends Application {
         return mRequestQueue;
     }
 
+    /**
+     * Add request to queue
+     *
+     * @param req Request<T>
+     * @param tag String
+     */
     public <T> void addToRequestQueue(Request<T> req, String tag) {
         // set the default tag if tag is empty
         req.setTag(TextUtils.isEmpty(tag) ? TAG : tag);
         getRequestQueue().add(req);
     }
 
+    /**
+     * Add request to queue
+     *
+     * @param req String
+     */
     public <T> void addToRequestQueue(Request<T> req) {
         req.setTag(TAG);
         getRequestQueue().add(req);
     }
 
+    /**
+     * Cancel pending requests
+     *
+     * @param tag Object
+     */
     public void cancelPendingRequests(Object tag) {
         if (mRequestQueue != null) {
             mRequestQueue.cancelAll(tag);
@@ -100,11 +124,20 @@ public class AppController extends Application {
 
 
     // ----- Current user.
-
+    /**
+     * Getter for currentUser
+     *
+     * @return TravelerBO
+     */
     public Traveler getCurrentUser() {
         return currentUser;
     }
 
+    /**
+     * Setter for currentUser
+     *
+     * @param currentUser TravelerBO
+     */
     public void setCurrentUser(Traveler currentUser) {
         this.currentUser = currentUser;
     }
@@ -112,6 +145,12 @@ public class AppController extends Application {
 
     // ----- Persistent chats.
 
+    /**
+     * Get current chat id by type
+     *
+     * @param chatType int
+     * @return int
+     */
     public int getCurrentActiveChatId(int chatType) {
         switch (chatType) {
             case CHATROOM_TYPE_PUBLIC:
@@ -124,6 +163,12 @@ public class AppController extends Application {
         return CHATROOM_EMPTY;
     }
 
+    /**
+     * Set current chat id by type
+     *
+     * @param chatType int
+     * @param currentActiveChatId int
+     */
     public void setCurrentActiveChatId(int chatType, int currentActiveChatId) {
         switch (chatType) {
             case CHATROOM_TYPE_PUBLIC:
@@ -136,6 +181,12 @@ public class AppController extends Application {
         }
     }
 
+    /**
+     * Get chats by type
+     *
+     * @param chatType int
+     * @return LinkedList
+     */
     public LinkedList<Chat> getChats(int chatType) {
         switch (chatType) {
             case CHATROOM_TYPE_PUBLIC:
@@ -148,6 +199,12 @@ public class AppController extends Application {
         return null;
     }
 
+    /**
+     * Add chat by type
+     *
+     * @param chatType int
+     * @param bo Chat
+     */
     public void addChat(int chatType, Chat bo) {
         switch (chatType) {
             case CHATROOM_TYPE_PUBLIC:
@@ -167,6 +224,13 @@ public class AppController extends Application {
         }
     }
 
+    /**
+     * Get chat by type and id
+     *
+     * @param chatType int
+     * @param chatId int
+     * @return Chat
+     */
     public Chat getChat(int chatType, int chatId) {
         LinkedList<Chat> chats = this.getChats(chatType);
 
@@ -181,6 +245,13 @@ public class AppController extends Application {
         return null;
     }
 
+    /**
+     * Get chat by type and name
+     *
+     * @param chatType String
+     * @param chatName String
+     * @return Chat
+     */
     public Chat getChat(int chatType, String chatName) {
         LinkedList<Chat> chats = this.getChats(chatType);
 
@@ -195,14 +266,31 @@ public class AppController extends Application {
         return null;
     }
 
+    /**
+     * Getter for current active chat by type
+     *
+     * @param chatType int
+     * @return Chat
+     */
     public Chat getCurrentActiveChat(int chatType) {
         return getChat(chatType, getCurrentActiveChatId(chatType));
     }
 
+    /**
+     * Getter for current active chat
+     *
+     * @return Chat
+     */
     public Chat getCurrentActiveChat() {
         return getChat(getCurrentActiveChatType(), getCurrentActiveChatId(getCurrentActiveChatType()));
     }
 
+    /**
+     * Setter for current active chat by type
+     *
+     * @param chatType int
+     * @param bo Chat
+     */
     public void setCurrentActiveChat(int chatType, Chat bo) {
         int chatId = CHATROOM_EMPTY;
 
@@ -221,14 +309,30 @@ public class AppController extends Application {
         this.setCurrentActiveChatType(chatType);
     }
 
+    /**
+     * Getter for current active chat type
+     *
+     * @return int
+     */
     public int getCurrentActiveChatType() {
         return currentActiveChatType;
     }
 
+    /**
+     * Setter for current active chat type
+     *
+     * @param currentActiveChatType int
+     */
     public void setCurrentActiveChatType(int currentActiveChatType) {
         this.currentActiveChatType = currentActiveChatType;
     }
 
+    /**
+     * Get chat by name
+     *
+     * @param chatName String
+     * @return Chat
+     */
     public Chat getChat(String chatName) {
         Chat chat = null;
 
@@ -243,6 +347,12 @@ public class AppController extends Application {
         return chat;
     }
 
+    /**
+     * Remove chat by id and type
+     *
+     * @param chatId int
+     * @param chatType int
+     */
     public void removeChat(int chatId, int chatType) {
         List<Chat> chats = (chatType == AppController.CHATROOM_TYPE_PUBLIC) ? publicChats : privateChats;
 
@@ -256,26 +366,56 @@ public class AppController extends Application {
 
     // ----- Shortcuts for public chats.
 
+    /**
+     * Get public chat by id
+     *
+     * @param chatId int
+     * @return Chat
+     */
     public Chat getPublicChat(int chatId) {
         return getChat(CHATROOM_TYPE_PUBLIC, chatId);
     }
 
+    /**
+     * Get public chat by name
+     *
+     * @param chatName String
+     * @return Chat
+     */
     public Chat getPublicChat(String chatName) {
         return getChat(CHATROOM_TYPE_PUBLIC, chatName);
     }
 
+    /**
+     * Get all public chats
+     *
+     * @return LinkedList
+     */
     public LinkedList<Chat> getPublicChats() {
         return getChats(CHATROOM_TYPE_PUBLIC);
     }
 
+    /**
+     * Get current active public chat
+     *
+     * @return Chat
+     */
     public Chat getCurrentActivePublicChat() {
         return getCurrentActiveChat(CHATROOM_TYPE_PUBLIC);
     }
 
+    /**
+     * Set current active public chat
+     *
+     * @param bo Chat
+     */
     public void setCurrentActivePublicChat(Chat bo) {
         setCurrentActiveChat(CHATROOM_TYPE_PUBLIC, bo);
     }
 
+    /**
+     * Set the current active chat type to public
+     */
     public void setCurrentActiveChatTypeToPublic() {
         setCurrentActiveChatType(CHATROOM_TYPE_PUBLIC);
     }
@@ -283,22 +423,46 @@ public class AppController extends Application {
 
     // ----- Shortcuts for private chats.
 
+    /**
+     * Set current active private chat
+     *
+     * @param bo Chat
+     */
     public void setCurrentActivePrivateChat(Chat bo) {
         setCurrentActiveChat(CHATROOM_TYPE_PRIVATE, bo);
     }
 
+    /**
+     * Set current active chat type to private
+     */
     public void setCurrentActiveChatTypeToPrivate() {
         setCurrentActiveChatType(CHATROOM_TYPE_PRIVATE);
     }
 
+    /**
+     * Get all private chats
+     *
+     * @return LinkedList
+     */
     public LinkedList<Chat> getPrivateChats() {
         return getChats(CHATROOM_TYPE_PRIVATE);
     }
 
+    /**
+     * Add a private chat
+     *
+     * @param bo Chat
+     */
     public void addPrivateChat(Chat bo) {
         addChat(CHATROOM_TYPE_PRIVATE, bo);
     }
 
+    /**
+     * Get a private chat by name
+     *
+     * @param chatName String
+     * @return Chat
+     */
     public Chat getPrivateChat(String chatName) {
         return getChat(CHATROOM_TYPE_PRIVATE, chatName);
     }
@@ -306,10 +470,20 @@ public class AppController extends Application {
 
     // ----- Activity utils.
 
+    /**
+     * Getter for the current activity
+     *
+     * @return Activity
+     */
     public Activity getCurrentActivity() {
         return currentActivity;
     }
 
+    /**
+     * Setter for current activity
+     *
+     * @param currentActivity Activity
+     */
     public void setCurrentActivity(Activity currentActivity) {
         this.currentActivity = currentActivity;
     }

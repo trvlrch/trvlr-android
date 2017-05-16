@@ -26,6 +26,15 @@ public class Chat {
     // Private chat fields.
     private Traveler chatPartner;
 
+    /**
+     * Contructor for Chat
+     *
+     * @param chatId int
+     * @param chatName String
+     * @param mStompClient StompClient
+     * @param messagesContainer ListView
+     * @param chatType int
+     */
     public Chat(int chatId, String chatName, StompClient mStompClient,
                 ListView messagesContainer, int chatType) {
         this.chatId = chatId;
@@ -36,6 +45,13 @@ public class Chat {
         this.fullyInitialized = true;
     }
 
+    /**
+     * Contructor for Chat
+     *
+     * @param chatId int
+     * @param chatName String
+     * @param chatPartner Traveler
+     */
     public Chat(int chatId, String chatName, Traveler chatPartner) {
         this.chatId = chatId;
         this.chatName = chatName;
@@ -44,6 +60,13 @@ public class Chat {
         this.fullyInitialized = false;
     }
 
+    /**
+     * Contructor for Chat
+     *
+     * @param chatId int
+     * @param chatName String
+     * @param chatType int
+     */
     public Chat(int chatId, String chatName, int chatType) {
         this.chatId = chatId;
         this.chatName = chatName;
@@ -83,6 +106,11 @@ public class Chat {
         this.messagesContainer = messagesContainer;
     }
 
+    /**
+     * Set initialization state to finished
+     *
+     * @param mStompClient StompClient
+     */
     public void finishInitialization(StompClient mStompClient/*, ListView messagesContainer*/) {
         this.mStompClient = mStompClient;
         // TODO clean up
