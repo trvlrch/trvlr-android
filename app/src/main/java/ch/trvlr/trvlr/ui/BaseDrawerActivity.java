@@ -32,7 +32,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
+import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Map;
 
 import ch.trvlr.trvlr.AppController;
 import ch.trvlr.trvlr.R;
@@ -110,10 +112,15 @@ public class BaseDrawerActivity extends AppCompatActivity implements NavigationV
     private void loadTravelerId() {
         if (travelerId > 0) return;
 
+        Map<String, String> params = new HashMap();
+        params.put("firebaseUid", FirebaseAuth.getInstance().getCurrentUser().getUid());
+        params.put("firebaseToken", FirebaseAuth.getInstance().getCurrentUser().getToken(false).getResult().getToken());
+        JSONObject parameters = new JSONObject(params);
+
         AppController.getInstance().addToRequestQueue(new JsonObjectRequest(
-                Request.Method.GET,
-                "http://trvlr.ch:8080/api/traveler/" + FirebaseAuth.getInstance().getCurrentUser().getUid(),
-                null,
+                Request.Method.POST,
+                "http://trvlr.ch:8080/api/traveler/auth",
+                parameters,
                 loadTravelerIdSuccess(),
                 loadError()
         ));
