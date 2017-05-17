@@ -109,6 +109,7 @@ public class LoginActivity extends AppCompatActivity
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithCredential:success");
                             startActivity(new Intent(LoginActivity.this, FindConnectionActivity.class));
+                            finish();
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
@@ -151,6 +152,16 @@ public class LoginActivity extends AppCompatActivity
         if (mProgressDialog != null) {
             mProgressDialog.dismiss();
         }
+    }
+
+    /**
+     * Handle back button
+     */
+    @Override
+    public void onBackPressed() {
+        finish();
+        System.gc();
+        System.exit(0);
     }
 
     private void showProgressDialog() {

@@ -258,6 +258,10 @@ public class BaseDrawerActivity extends AppCompatActivity implements NavigationV
 
                     break;
 
+                case "ui.FindConnectionActivity":
+                    logout();
+                    break;
+
                 default:
                     appController.setCurrentActiveChat(AppController.CHATROOM_TYPE_PUBLIC, null);
                     appController.setCurrentActiveChat(AppController.CHATROOM_TYPE_PRIVATE, null);
@@ -451,9 +455,7 @@ public class BaseDrawerActivity extends AppCompatActivity implements NavigationV
                 break;
 
             case R.id.logout:
-                FirebaseAuth.getInstance().signOut();
-                startActivity(new Intent(getApplicationContext(), LoginActivity.class));
-                finish();
+                logout();
                 break;
 
             case R.id.leave_chat_room:
@@ -531,6 +533,14 @@ public class BaseDrawerActivity extends AppCompatActivity implements NavigationV
         if (this.equals(currentActivity)) {
             appController.setCurrentActivity(null);
         }
+    }
+
+    protected void logout() {
+        FirebaseAuth.getInstance().signOut();
+        Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        finish();
     }
 }
 
