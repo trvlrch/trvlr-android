@@ -8,6 +8,7 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -210,7 +211,7 @@ public class AppController extends Application {
             case CHATROOM_TYPE_PUBLIC:
                 if (getChat(CHATROOM_TYPE_PUBLIC, bo.getChatId()) == null) {
                     this.publicChats.add(bo);
-                    this.publicChats.sort(cc);
+                    Collections.sort(this.publicChats, cc);
                 }
 
                 break;
@@ -218,7 +219,7 @@ public class AppController extends Application {
             case CHATROOM_TYPE_PRIVATE:
                 if (getChat(CHATROOM_TYPE_PRIVATE, bo.getChatId()) == null) {
                     this.privateChats.add(bo);
-                    this.privateChats.sort(cc);
+                    Collections.sort(this.privateChats, cc);
                 }
                 break;
         }
