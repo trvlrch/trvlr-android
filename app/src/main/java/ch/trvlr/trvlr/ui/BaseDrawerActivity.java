@@ -113,8 +113,19 @@ public class BaseDrawerActivity extends AppCompatActivity implements NavigationV
         if (travelerId > 0) return;
 
         Map<String, String> params = new HashMap();
-        params.put("firebaseId", FirebaseAuth.getInstance().getCurrentUser().getUid());
-        params.put("firebaseToken", FirebaseAuth.getInstance().getCurrentUser().getToken(false).getResult().getToken());
+
+        String firebaseId = "";
+        String firebaseToken = "";
+
+        try {
+            firebaseId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+            firebaseToken = FirebaseAuth.getInstance().getCurrentUser().getToken(false).getResult().getToken();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        params.put("firebaseId", firebaseId);
+        params.put("firebaseToken", firebaseToken);
         JSONObject parameters = new JSONObject(params);
 
         AppController.getInstance().addToRequestQueue(new JsonObjectRequest(
