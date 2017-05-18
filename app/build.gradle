@@ -2,13 +2,13 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 23
-    buildToolsVersion "25.0.0"
+    buildToolsVersion "25.0.2"
     defaultConfig {
         applicationId "ch.trvlr.trvlr"
         minSdkVersion 23
         targetSdkVersion 23
-        versionCode 3
-        versionName "1.0.2"
+        versionCode 4
+        versionName "1.0.3"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -26,13 +26,13 @@ dependencies {
     })
 
     compile 'com.github.NaikSoftware:StompProtocolAndroid:1.2.2'
-    compile "org.java-websocket:java-websocket:1.3.3" // needed for NaikSoft Android STOMP
+    compile 'org.java-websocket:java-websocket:1.3.3' // needed for NaikSoft Android STOMP
     compile 'com.android.volley:volley:1.0.0'
-    compile 'com.google.code.gson:gson:2.4'
+    compile 'com.google.code.gson:gson:2.8.0'
     compile 'com.android.support:appcompat-v7:23.4.0'
-    compile 'com.android.support.constraint:constraint-layout:1.0.0-alpha9'
+    compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'com.android.support:design:23.4.0'
-    compile 'com.google.android.gms:play-services-auth:9.4.0'
+    compile 'com.google.android.gms:play-services-auth:9.4.0' // 10.2.6
     compile 'com.google.firebase:firebase-auth:9.4.0'
     compile 'com.google.firebase:firebase-core:9.4.0'
     testCompile 'junit:junit:4.12'
